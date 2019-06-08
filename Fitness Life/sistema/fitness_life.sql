@@ -1,23 +1,25 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.7.1
--- http://www.phpmyadmin.net
+-- version 4.9.0.1
+-- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 06-Jul-2015 às 00:18
--- Versão do servidor: 5.6.20
--- PHP Version: 5.5.15
+-- Tempo de geração: 08-Jun-2019 às 02:57
+-- Versão do servidor: 10.3.15-MariaDB
+-- versão do PHP: 7.3.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `fitness_life`
+-- Banco de dados: `fitness_life`
 --
 
 -- --------------------------------------------------------
@@ -26,10 +28,10 @@ SET time_zone = "+00:00";
 -- Estrutura da tabela `perfil`
 --
 
-CREATE TABLE IF NOT EXISTS `perfil` (
-`idperfil` int(4) NOT NULL,
+CREATE TABLE `perfil` (
+  `idperfil` int(4) NOT NULL,
   `perfil` varchar(25) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `perfil`
@@ -46,7 +48,7 @@ INSERT INTO `perfil` (`idperfil`, `perfil`) VALUES
 -- Estrutura da tabela `tb_agendamento`
 --
 
-CREATE TABLE IF NOT EXISTS `tb_agendamento` (
+CREATE TABLE `tb_agendamento` (
   `id_pessoa_cpf` varchar(11) NOT NULL,
   `id_agenda_semanal` int(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -56,6 +58,7 @@ CREATE TABLE IF NOT EXISTS `tb_agendamento` (
 --
 
 INSERT INTO `tb_agendamento` (`id_pessoa_cpf`, `id_agenda_semanal`) VALUES
+('01575631466', 4),
 ('03732757498', 4),
 ('11320992692', 4),
 ('13123608522', 4),
@@ -70,15 +73,12 @@ INSERT INTO `tb_agendamento` (`id_pessoa_cpf`, `id_agenda_semanal`) VALUES
 ('74509718527', 14),
 ('01575631466', 15),
 ('03732757498', 15),
-('11320992692', 15),
-('13123608522', 15),
 ('13530359050', 15),
 ('16559357392', 15),
 ('24304335596', 15),
 ('35755563691', 15),
 ('38514563190', 15),
 ('38525412988', 15),
-('41205896171', 15),
 ('41303522454', 15),
 ('48442895868', 15),
 ('48561661828', 15),
@@ -93,6 +93,7 @@ INSERT INTO `tb_agendamento` (`id_pessoa_cpf`, `id_agenda_semanal`) VALUES
 ('13530359050', 17),
 ('74509718527', 17),
 ('78806580256', 17),
+('01575631466', 18),
 ('03732757498', 18),
 ('11320992692', 18),
 ('13123608522', 18),
@@ -128,13 +129,13 @@ INSERT INTO `tb_agendamento` (`id_pessoa_cpf`, `id_agenda_semanal`) VALUES
 -- Estrutura da tabela `tb_agenda_semanal`
 --
 
-CREATE TABLE IF NOT EXISTS `tb_agenda_semanal` (
-`id_agenda_semanal` int(4) NOT NULL,
+CREATE TABLE `tb_agenda_semanal` (
+  `id_agenda_semanal` int(4) NOT NULL,
   `dia_da_semana` varchar(15) NOT NULL,
   `horario_inicial` time NOT NULL,
   `horario_final` time NOT NULL,
   `nome_aula` varchar(25) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Extraindo dados da tabela `tb_agenda_semanal`
@@ -156,7 +157,7 @@ INSERT INTO `tb_agenda_semanal` (`id_agenda_semanal`, `dia_da_semana`, `horario_
 -- Estrutura da tabela `tb_aluno`
 --
 
-CREATE TABLE IF NOT EXISTS `tb_aluno` (
+CREATE TABLE `tb_aluno` (
   `id_pessoa_cpf` varchar(11) NOT NULL,
   `peso_inicial` float DEFAULT NULL,
   `peso_durante` float DEFAULT NULL,
@@ -196,7 +197,7 @@ INSERT INTO `tb_aluno` (`id_pessoa_cpf`, `peso_inicial`, `peso_durante`, `data_e
 -- Estrutura da tabela `tb_funcionario`
 --
 
-CREATE TABLE IF NOT EXISTS `tb_funcionario` (
+CREATE TABLE `tb_funcionario` (
   `id_pessoa_cpf` varchar(11) NOT NULL,
   `cargo` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -220,7 +221,7 @@ INSERT INTO `tb_funcionario` (`id_pessoa_cpf`, `cargo`) VALUES
 -- Estrutura da tabela `tb_pessoa`
 --
 
-CREATE TABLE IF NOT EXISTS `tb_pessoa` (
+CREATE TABLE `tb_pessoa` (
   `cpf` varchar(11) NOT NULL,
   `nome` varchar(15) NOT NULL,
   `sobrenome` varchar(45) NOT NULL,
@@ -276,7 +277,7 @@ INSERT INTO `tb_pessoa` (`cpf`, `nome`, `sobrenome`, `sexo`, `data_nascimento`, 
 -- Estrutura da tabela `usuario`
 --
 
-CREATE TABLE IF NOT EXISTS `usuario` (
+CREATE TABLE `usuario` (
   `id_pessoa_cpf` varchar(11) NOT NULL,
   `usuario` varchar(15) DEFAULT NULL,
   `senha` varchar(45) NOT NULL,
@@ -288,9 +289,9 @@ CREATE TABLE IF NOT EXISTS `usuario` (
 --
 
 INSERT INTO `usuario` (`id_pessoa_cpf`, `usuario`, `senha`, `perfil_idperfil`) VALUES
-('01575631466', 'Marione', 'e10adc3949ba59abbe56e057f20f883e', 3),
-('03732757498', 'LetÃ­cia', 'c33367701511b4f6020ec61ded352059', 3),
-('11320992692', 'Fernanda', 'e10adc3949ba59abbe56e057f20f883e', 3),
+('01575631466', 'Marione', '202cb962ac59075b964b07152d234b70', 3),
+('03732757498', 'LetÃ­cia', '202cb962ac59075b964b07152d234b70', 3),
+('11320992692', 'Fernanda', '202cb962ac59075b964b07152d234b70', 3),
 ('13123608522', 'Fernando', 'e10adc3949ba59abbe56e057f20f883e', 3),
 ('13530359050', 'Henrique', 'e10adc3949ba59abbe56e057f20f883e', 3),
 ('16559357392', 'Luciano', 'e10adc3949ba59abbe56e057f20f883e', 3),
@@ -301,11 +302,11 @@ INSERT INTO `usuario` (`id_pessoa_cpf`, `usuario`, `senha`, `perfil_idperfil`) V
 ('38514563190', 'Mario', 'e10adc3949ba59abbe56e057f20f883e', 3),
 ('38525412988', 'Jesus', 'e10adc3949ba59abbe56e057f20f883e', 3),
 ('41205896171', 'Aparecida', 'e10adc3949ba59abbe56e057f20f883e', 3),
-('41303522454', 'Mauricio', 'e10adc3949ba59abbe56e057f20f883e', 3),
+('41303522454', 'Mauricio', '202cb962ac59075b964b07152d234b70', 1),
 ('48442895868', 'Eridina', 'e10adc3949ba59abbe56e057f20f883e', 3),
 ('48561661828', 'Mauricio', '827ccb0eea8a706c4c34a16891f84e7b', 3),
 ('50248686500', 'Jonas', 'e10adc3949ba59abbe56e057f20f883e', 3),
-('51257593099', 'Maria', 'e10adc3949ba59abbe56e057f20f883e', 2),
+('51257593099', 'Maria', '202cb962ac59075b964b07152d234b70', 2),
 ('62368575200', 'Zoe', 'e10adc3949ba59abbe56e057f20f883e', 2),
 ('67548728298', 'ClÃªnio', 'e10adc3949ba59abbe56e057f20f883e', 2),
 ('72102345009', 'Maria', '202cb962ac59075b964b07152d234b70', 3),
@@ -316,90 +317,96 @@ INSERT INTO `usuario` (`id_pessoa_cpf`, `usuario`, `senha`, `perfil_idperfil`) V
 ('85374555987', 'Edimar', 'e10adc3949ba59abbe56e057f20f883e', 2),
 ('86321493856', 'Maria', 'e10adc3949ba59abbe56e057f20f883e', 3),
 ('96230797968', 'Iane', 'e10adc3949ba59abbe56e057f20f883e', 2),
-('admin', 'Admin', 'e10adc3949ba59abbe56e057f20f883e', 1);
+('cpfadmin', 'admin', '202cb962ac59075b964b07152d234b70', 1);
 
 --
--- Indexes for dumped tables
+-- Índices para tabelas despejadas
 --
 
 --
--- Indexes for table `perfil`
+-- Índices para tabela `perfil`
 --
 ALTER TABLE `perfil`
- ADD PRIMARY KEY (`idperfil`);
+  ADD PRIMARY KEY (`idperfil`);
 
 --
--- Indexes for table `tb_agendamento`
+-- Índices para tabela `tb_agendamento`
 --
 ALTER TABLE `tb_agendamento`
- ADD PRIMARY KEY (`id_agenda_semanal`,`id_pessoa_cpf`), ADD KEY `fk_tb_agenda_semanal_has_tb_aluno_tb_aluno1_idx` (`id_pessoa_cpf`), ADD KEY `fk_tb_agenda_semanal_has_tb_aluno_tb_agenda_semanal1_idx` (`id_agenda_semanal`);
+  ADD PRIMARY KEY (`id_agenda_semanal`,`id_pessoa_cpf`),
+  ADD KEY `fk_tb_agenda_semanal_has_tb_aluno_tb_aluno1_idx` (`id_pessoa_cpf`),
+  ADD KEY `fk_tb_agenda_semanal_has_tb_aluno_tb_agenda_semanal1_idx` (`id_agenda_semanal`);
 
 --
--- Indexes for table `tb_agenda_semanal`
+-- Índices para tabela `tb_agenda_semanal`
 --
 ALTER TABLE `tb_agenda_semanal`
- ADD PRIMARY KEY (`id_agenda_semanal`);
+  ADD PRIMARY KEY (`id_agenda_semanal`);
 
 --
--- Indexes for table `tb_aluno`
+-- Índices para tabela `tb_aluno`
 --
 ALTER TABLE `tb_aluno`
- ADD PRIMARY KEY (`id_pessoa_cpf`);
+  ADD PRIMARY KEY (`id_pessoa_cpf`);
 
 --
--- Indexes for table `tb_funcionario`
+-- Índices para tabela `tb_funcionario`
 --
 ALTER TABLE `tb_funcionario`
- ADD PRIMARY KEY (`id_pessoa_cpf`);
+  ADD PRIMARY KEY (`id_pessoa_cpf`);
 
 --
--- Indexes for table `tb_pessoa`
+-- Índices para tabela `tb_pessoa`
 --
 ALTER TABLE `tb_pessoa`
- ADD PRIMARY KEY (`cpf`);
+  ADD PRIMARY KEY (`cpf`);
 
 --
--- Indexes for table `usuario`
+-- Índices para tabela `usuario`
 --
 ALTER TABLE `usuario`
- ADD PRIMARY KEY (`id_pessoa_cpf`), ADD KEY `fk_usuario_perfil` (`perfil_idperfil`);
+  ADD PRIMARY KEY (`id_pessoa_cpf`),
+  ADD KEY `fk_usuario_perfil` (`perfil_idperfil`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de tabelas despejadas
 --
 
 --
--- AUTO_INCREMENT for table `perfil`
+-- AUTO_INCREMENT de tabela `perfil`
 --
 ALTER TABLE `perfil`
-MODIFY `idperfil` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `idperfil` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
--- AUTO_INCREMENT for table `tb_agenda_semanal`
+-- AUTO_INCREMENT de tabela `tb_agenda_semanal`
 --
 ALTER TABLE `tb_agenda_semanal`
-MODIFY `id_agenda_semanal` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=23;
+  MODIFY `id_agenda_semanal` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
 --
--- Constraints for dumped tables
+-- Restrições para despejos de tabelas
 --
 
 --
 -- Limitadores para a tabela `tb_agendamento`
 --
 ALTER TABLE `tb_agendamento`
-ADD CONSTRAINT `fk_tb_agenda_semanal_has_tb_aluno_tb_agenda_semanal1` FOREIGN KEY (`id_agenda_semanal`) REFERENCES `tb_agenda_semanal` (`id_agenda_semanal`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-ADD CONSTRAINT `fk_tb_agenda_semanal_has_tb_aluno_tb_aluno1` FOREIGN KEY (`id_pessoa_cpf`) REFERENCES `tb_aluno` (`id_pessoa_cpf`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_tb_agenda_semanal_has_tb_aluno_tb_agenda_semanal1` FOREIGN KEY (`id_agenda_semanal`) REFERENCES `tb_agenda_semanal` (`id_agenda_semanal`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_tb_agenda_semanal_has_tb_aluno_tb_aluno1` FOREIGN KEY (`id_pessoa_cpf`) REFERENCES `tb_aluno` (`id_pessoa_cpf`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Limitadores para a tabela `tb_aluno`
 --
 ALTER TABLE `tb_aluno`
-ADD CONSTRAINT `fk_tb_aluno_tb_pessoa1` FOREIGN KEY (`id_pessoa_cpf`) REFERENCES `tb_pessoa` (`cpf`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_tb_aluno_tb_pessoa1` FOREIGN KEY (`id_pessoa_cpf`) REFERENCES `tb_pessoa` (`cpf`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Limitadores para a tabela `tb_funcionario`
 --
 ALTER TABLE `tb_funcionario`
-ADD CONSTRAINT `fk_tb_funcionario_tb_pessoa1` FOREIGN KEY (`id_pessoa_cpf`) REFERENCES `tb_pessoa` (`cpf`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_tb_funcionario_tb_pessoa1` FOREIGN KEY (`id_pessoa_cpf`) REFERENCES `tb_pessoa` (`cpf`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
