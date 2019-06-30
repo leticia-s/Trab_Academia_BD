@@ -139,15 +139,15 @@ CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_aula` (
   PRIMARY KEY (`id_aula`))
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
--- Table `db_studiotopfit`.`tb_turma`
+-- Table `db_studiotopfit`.`tb_sala`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `db_studiotopfit`.`tb_turma` ;
+DROP TABLE IF EXISTS `db_studiotopfit`.`tb_sala` ;
 
-CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_turma` (
-  `idtb_turma` INT NOT NULL,
-  PRIMARY KEY (`idtb_turma`))
+CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_sala` (
+  `id_sala` INT(4) NOT NULL AUTO_INCREMENT,
+  `localizacao` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id_sala`))
 ENGINE = InnoDB;
 
 
@@ -157,8 +157,25 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `db_studiotopfit`.`tb_turma` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_turma` (
-  `idtb_turma` INT NOT NULL,
-  PRIMARY KEY (`idtb_turma`))
+  `id_codigo` INT NOT NULL,
+  `tb_sala_id_sala` INT NOT NULL,
+  `aula_id_aula` INT NOT NULL,
+  `dia_da_semana` INT NOT NULL,
+  `horario_inicial` INT NOT NULL,
+  `horario_final` INT NOT NULL, 
+  PRIMARY KEY (`id_codigo`),
+  INDEX `fk_tb_turma_tb_sala_id_sala_turma` (`tb_sala_id_sala` ASC),
+  INDEX `fk_tb_turma_aula_id_aula` (`aula_id_aula` ASC),
+  CONSTRAINT `fk_tb_turma_tb_sala_id_sala_turma`
+	FOREIGN KEY (`tb_sala_id_sala`) 
+	REFERENCES `db_studiotopfit`.`tb_sala` (`id_sala`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_turma_aula_id_aula`
+	FOREIGN KEY (`aula_id_aula`) 
+	REFERENCES `db_studiotopfit`.`tb_aula` (`id_aula`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -242,11 +259,11 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `db_studiotopfit`.`tb_turma_has_tb_professor` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_turma_has_tb_professor` (
-  `tb_turma_id_codigo` INT(4) NOT NULL,
+  `tb_turma_id_codigo` INT NOT NULL,
   `tb_professor_tb_funcionario_id_matricula` INT(9) NOT NULL,
   PRIMARY KEY (`tb_turma_id_codigo`, `tb_professor_tb_funcionario_id_matricula`),
-  INDEX `fk_tb_turma_has_tb_professor_tb_professor1_idx` (`tb_professor_tb_funcionario_id_matricula` ASC) ,
-  INDEX `fk_tb_turma_has_tb_professor_tb_turma1_idx` (`tb_turma_id_codigo` ASC) ,
+  INDEX `fk_tb_turma_has_tb_professor_tb_professor1` (`tb_professor_tb_funcionario_id_matricula` ASC) ,
+  INDEX `fk_tb_turma_has_tb_professor_tb_turma1` (`tb_turma_id_codigo` ASC) ,
   CONSTRAINT `fk_tb_turma_has_tb_professor_tb_turma1`
     FOREIGN KEY (`tb_turma_id_codigo`)
     REFERENCES `db_studiotopfit`.`tb_turma` (`id_codigo`)
@@ -266,11 +283,11 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `db_studiotopfit`.`tb_turma_has_tb_aluno` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_turma_has_tb_aluno` (
-  `tb_turma_id_codigo` INT(4) NOT NULL,
+  `tb_turma_id_codigo` INT NOT NULL,
   `tb_aluno_id_matricula` INT(9) NOT NULL,
   PRIMARY KEY (`tb_turma_id_codigo`, `tb_aluno_id_matricula`),
-  INDEX `fk_tb_turma_has_tb_aluno_tb_aluno1_idx` (`tb_aluno_id_matricula` ASC) ,
-  INDEX `fk_tb_turma_has_tb_aluno_tb_turma1_idx` (`tb_turma_id_codigo` ASC) ,
+  INDEX `fk_tb_turma_has_tb_aluno_tb_aluno1` (`tb_aluno_id_matricula` ASC) ,
+  INDEX `fk_tb_turma_has_tb_aluno_tb_turma1` (`tb_turma_id_codigo` ASC) ,
   CONSTRAINT `fk_tb_turma_has_tb_aluno_tb_turma1`
     FOREIGN KEY (`tb_turma_id_codigo`)
     REFERENCES `db_studiotopfit`.`tb_turma` (`id_codigo`)
@@ -293,12 +310,12 @@ CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`lista_turma` (`dia_da_semana` INT,
 -- -----------------------------------------------------
 -- View `db_studiotopfit`.`lista_turma`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `db_studiotopfit`.`lista_turma`;
-DROP VIEW IF EXISTS `db_studiotopfit`.`lista_turma` ;
-USE `db_studiotopfit`;
-CREATE  OR REPLACE VIEW `lista_turma` AS SELECT t.dia_da_semana, t.horario_inicial, t.horario_final, a.nome, s.localizacao, ps.nome
-FROM tb_turma AS t, tb_sala AS s, tb_aula AS a, tb_turma_professor AS tp, tb_pessoa AS ps
-WHERE t.tb_sala_id_sala = s.id_sala AND t.aula_id_aula = a.id_aula AND t.id_codigo = tp.tb_turma_id_codigo AND ps.cpf = tp.tb_professor_tb_funcionario_id_pessoa_cpf;
+-- DROP TABLE IF EXISTS `db_studiotopfit`.`lista_turma`;
+-- DROP VIEW IF EXISTS `db_studiotopfit`.`lista_turma` ;
+-- USE `db_studiotopfit`;
+-- CREATE  OR REPLACE VIEW `lista_turma` AS SELECT t.dia_da_semana, t.horario_inicial, t.horario_final, a.nome, s.localizacao, ps.nome
+-- FROM tb_turma AS t, tb_sala AS s, tb_aula AS a, tb_turma_professor AS tp, tb_pessoa AS ps
+-- WHERE t.tb_sala_id_sala = s.id_sala AND t.aula_id_aula = a.id_aula AND t.id_codigo = tp.tb_turma_id_codigo AND ps.cpf = tp.tb_professor_tb_funcionario_id_pessoa_cpf;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
