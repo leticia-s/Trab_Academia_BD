@@ -209,12 +209,12 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `db_studiotopfit`.`tb_pessoa_telefone` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_pessoa_telefone` (
-  `tb_pessoa_cpf` BIGINT(11) NOT NULL,
+  `id_pessoa_cpf` BIGINT(11) NOT NULL,
   `telefone` VARCHAR(18) NOT NULL,
-  INDEX `fk_tb_pessoa_telefone_tb_pessoa1_idx` (`tb_pessoa_cpf` ASC) ,
-  PRIMARY KEY (`tb_pessoa_cpf`, `telefone`),
+  INDEX `fk_tb_pessoa_telefone_tb_pessoa1_idx` (`id_pessoa_cpf` ASC) ,
+  PRIMARY KEY (`id_pessoa_cpf`, `telefone`),
   CONSTRAINT `fk_tb_pessoa_telefone_tb_pessoa1`
-    FOREIGN KEY (`tb_pessoa_cpf`)
+    FOREIGN KEY (`id_pessoa_cpf`)
     REFERENCES `db_studiotopfit`.`tb_pessoa` (`cpf`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
