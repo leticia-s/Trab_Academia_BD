@@ -468,10 +468,16 @@ DELIMITER ;
 DROP TRIGGER IF EXISTS paymenttrigger;
 DELIMITER //
 CREATE TRIGGER `paymenttrigger` BEFORE UPDATE ON `tb_pagamento` FOR EACH ROW 
-IF (OLD.valor <> NEW.valor) THEN
-    INSERT INTO tb_auditoria_pagamento (mysql_user, id_matricula, coluna_alterada, valor_antigo, novo_valor) 
-    VALUES (CURRENT_USER(), OLD.id_matricula, 'valor', OLD.valor, NEW.valor);
-END IF;//
+BEGIN
+    IF (OLD.id_matricula <> NEW.id_matricula) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Você não pode alterar a matrícula de uma cobrança!';
+    END IF;
+    IF (OLD.valor <> NEW.valor) THEN
+        INSERT INTO tb_auditoria_pagamento (mysql_user, id_matricula, coluna_alterada, valor_antigo, novo_valor) 
+        VALUES (CURRENT_USER(), OLD.id_matricula, 'valor', OLD.valor, NEW.valor);
+    END IF;
+END//
 DELIMITER ;
 -- -----------------------------------------------------
 -- INSERT ADMIN LOGIN
