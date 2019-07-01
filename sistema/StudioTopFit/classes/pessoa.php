@@ -21,7 +21,7 @@ class Pessoa {
     private $pesoDurante_Aluno;
     private $dataEntrada_Aluno;
     private $cargo_Funcionario;
-
+    
     function getNome() {
         return $this->nome;
     }
@@ -136,7 +136,7 @@ class Pessoa {
     function getSenha() {
         return $this->senha;
     }
-
+    
     function getIdPerfil() {
         return $this->idPerfil;
     }
@@ -156,7 +156,7 @@ class Pessoa {
     function getCargo_Funcionario() {
         return $this->cargo_Funcionario;
     }
-
+ 
     function setSenha($senha) {
         $this->senha = md5($senha);
     }
@@ -184,6 +184,27 @@ class Pessoa {
         $this->cargo_Funcionario = $cargo_Funcionario;
     }
 
+
+    
+    //modificação para listar array funcionario
+    private $matricula_Funcionario;
+    private $salario_Funcionario;
+     function setSalario_Funcionario($salaSalariouncionario) {
+        $this->salario_Funcionario = $salario_Funcionario;
+    }
+     function setMatricula_Funcionario($matricula_Funcionario) {
+        $this->matricula_Funcionario = $matricula_Funcionario;
+    }
+    function getMatricula_Funcionario() {
+        return $this->matricula_Funcionario;
+    }
+
+    function getSalario_Funcionario() {
+        return $this->salario_Funcionario;
+    }
+
+     
+    
 }
 
 ?>

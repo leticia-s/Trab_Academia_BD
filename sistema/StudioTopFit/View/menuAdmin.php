@@ -8,3 +8,5 @@
 <a class="list-group-item list-group-item-action bg-light" href="aluno/excluir.php" target="centropag">Excluir Aluno</a>
 <a class="list-group-item list-group-item-action bg-light" href="aluno/listar.php" target="centropag">Listar Alunos </a>
 <a class="list-group-item list-group-item-action bg-light" id="a2" href="agendar/agendaraulas.php" target="centropag">Agendar Aula </a>
+<a class="list-group-item list-group-item-action bg-light" id="a2" href="local/viewLocais.php" target="centropag">Locais </a>
+<a class="list-group-item list-group-item-action bg-light" id="a2" href="aula/viewAulas.php" target="centropag">Aulas </a>

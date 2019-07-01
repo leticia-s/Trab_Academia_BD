@@ -71,19 +71,27 @@
                 else
                     return false;
             }
+        //campos dinamicos
+            $(function () {
+                var scntDiv = $('#dynamicDiv');
+                $(document).on('click', '#addInput', function () {
+                    $('<p>'+
+                        '<input type="text" id="inputeste" size="20" value="" placeholder="" /> '+
+                        '<a class="btn btn-danger" href="javascript:void(0)" id="remInput">'+
+                            '<span class="glyphicon glyphicon-minus" aria-hidden="true"></span> '+
+                            'Remover curso'+
+                        '</a>'+
+                    '</p>').appendTo(scntDiv);
+                    return false;
+                });
+                $(document).on('click', '#remInput', function () {
+                    $(this).parents('p').remove();
+                    return false;
+                });
+            });
         </script>
 
         <link href="/StudioTopFit/css/bootstrap.min.css" rel="stylesheet">
-        <style> body{background-color: #E3E3E3;}
-            legend { 
-                background :  #496B96 ; 
-                color :  #fff ; 
-                padding :  2px  115px  ; 
-                font-size :  19px ; 
-                border-radius :  10px ; 
-                font-weight:  bold;
-            }
-        </style>
     </head>
     <body>
 
@@ -92,7 +100,6 @@
 
                 <!-- Form Name -->
                 <legend>Cadastrar Funcionário</legend>
-
                 <!-- Text input-->
                 <div class="form-group">
                     <label class="col-md-4 control-label" for="nome">Nome:</label>  
@@ -246,7 +253,40 @@
 
                     </div>
                 </div>
-
+                  <!-- SALARIO-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Salário:</label>
+                    <div class="input-group"><span class="input-group-addon left">R$</span>
+                        <input style="width: 170px;" type="number" step="500.00" class="form-control" id="salario" placeholder="Digite o valor" name="salario" required="">
+                    </div>  
+                 </div>  
+                 <!-- é professor  -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="prof">É um professor:</label>
+                    <div class="col-md-4"> 
+                        <label class="radio-inline" for="prof-1">
+                            <input type="radio" name="prof" id="prof-1" value="sim" >
+                            Sim
+                        </label> 
+                        <label class="radio-inline" for="prof-0">
+                            <input type="radio" name="prof" id="prof-0" value="nao" checked="checked">
+                            Não
+                        </label>
+                    </div>
+                </div>
+                <!-- campo dinamico --> 
+                 <div class="form-group">
+                    <label class="col-md-4 control-label" for="prof">Adicionar cursos, caso seja um professor:</label> 
+                    <a class="btn btn-primary" href="javascript:void(0)" id="addInput">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        Adicionar Curso 
+                    </a>
+                    <br/>
+                    <div id="dynamicDiv">
+                        <p>
+                        </p>
+                    </div>
+                </div>
                 <!-- Button (Double) -->
                 <div class="form-group">
                     <label class="col-md-4 control-label" for="enviar"></label>
@@ -255,6 +295,7 @@
                         <button id="limpar" name="limpar" type="reset" class="btn btn-warning">Limpar</button>
                     </div>
                 </div>
+                
 
             </form>
 

@@ -139,17 +139,6 @@ CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_aula` (
   PRIMARY KEY (`id_aula`))
 ENGINE = InnoDB;
 
--- -----------------------------------------------------
--- Table `db_studiotopfit`.`tb_sala`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `db_studiotopfit`.`tb_sala` ;
-
-CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_sala` (
-  `id_sala` INT(4) NOT NULL AUTO_INCREMENT,
-  `localizacao` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id_sala`))
-ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `db_studiotopfit`.`tb_turma`
@@ -158,7 +147,7 @@ DROP TABLE IF EXISTS `db_studiotopfit`.`tb_turma` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_turma` (
   `id_codigo` INT(4) NOT NULL,
-  `tb_sala_id_sala` INT(4) NOT NULL,
+  `tb_local_id_local` INT(4) NOT NULL,
   `aula_id_aula` INT(4) NOT NULL,
   `dia_da_semana` INT(1) NOT NULL,
   `horario_inicial` TIME NOT NULL,
@@ -166,11 +155,11 @@ CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_turma` (
   `descricao` VARCHAR(250),
   `qtdMax` INT(3) NOT NULL,
   PRIMARY KEY (`id_codigo`),
-  INDEX `fk_tb_turma_tb_sala_id_sala_turma` (`tb_sala_id_sala` ASC),
+  INDEX `fk_tb_turma_tb_local_id_local_turma` (`tb_local_id_local` ASC),
   INDEX `fk_tb_turma_aula_id_aula` (`aula_id_aula` ASC),
-  CONSTRAINT `fk_tb_turma_tb_sala_id_sala_turma`
-	FOREIGN KEY (`tb_sala_id_sala`) 
-	REFERENCES `db_studiotopfit`.`tb_sala` (`id_sala`)
+  CONSTRAINT `fk_tb_turma_tb_local_id_local_turma`
+	FOREIGN KEY (`tb_local_id_local`) 
+	REFERENCES `db_studiotopfit`.`tb_local` (`id_local`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tb_turma_aula_id_aula`
@@ -221,12 +210,12 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `db_studiotopfit`.`tb_pessoa_telefone` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_pessoa_telefone` (
-  `tb_pessoa_cpf` BIGINT(11) NOT NULL,
+  `id_pessoa_cpf` BIGINT(11) NOT NULL,
   `telefone` VARCHAR(18) NOT NULL,
-  INDEX `fk_tb_pessoa_telefone_tb_pessoa1_idx` (`tb_pessoa_cpf` ASC) ,
-  PRIMARY KEY (`tb_pessoa_cpf`, `telefone`),
+  INDEX `fk_tb_pessoa_telefone_tb_pessoa1_idx` (`id_pessoa_cpf` ASC) ,
+  PRIMARY KEY (`id_pessoa_cpf`, `telefone`),
   CONSTRAINT `fk_tb_pessoa_telefone_tb_pessoa1`
-    FOREIGN KEY (`tb_pessoa_cpf`)
+    FOREIGN KEY (`id_pessoa_cpf`)
     REFERENCES `db_studiotopfit`.`tb_pessoa` (`cpf`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -316,8 +305,8 @@ CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`lista_turma` (`dia_da_semana` INT,
 -- DROP VIEW IF EXISTS `db_studiotopfit`.`lista_turma` ;
 -- USE `db_studiotopfit`;
 -- CREATE  OR REPLACE VIEW `lista_turma` AS SELECT t.dia_da_semana, t.horario_inicial, t.horario_final, a.nome, s.localizacao, ps.nome
--- FROM tb_turma AS t, tb_sala AS s, tb_aula AS a, tb_turma_professor AS tp, tb_pessoa AS ps
--- WHERE t.tb_sala_id_sala = s.id_sala AND t.aula_id_aula = a.id_aula AND t.id_codigo = tp.tb_turma_id_codigo AND ps.cpf = tp.tb_professor_tb_funcionario_id_pessoa_cpf;
+-- FROM tb_turma AS t, tb_local AS s, tb_aula AS a, tb_turma_professor AS tp, tb_pessoa AS ps
+-- WHERE t.tb_local_id_local = s.id_local AND t.aula_id_aula = a.id_aula AND t.id_codigo = tp.tb_turma_id_codigo AND ps.cpf = tp.tb_professor_tb_funcionario_id_pessoa_cpf;
 
 -- -----------------------------------------------------
 -- INSERT ADMIN LOGIN

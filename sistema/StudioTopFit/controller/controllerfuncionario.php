@@ -2,6 +2,7 @@
 
 include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '../classes/pessoa.php';
 include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '../dao/funcionariodao.php';
+include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '../classes/funcionario_e_professor.php';
 
 $operacao = $_GET['operacao'];
 $controller = new ControllerFuncionario();
@@ -37,20 +38,32 @@ class ControllerFuncionario {
         $pessoa->setTelefoneCelular($_POST['telefoneResidencial']);
         $pessoa->setTelefoneResidencial($_POST['telefoneCelular']);
         $pessoa->setEmail($_POST['email']);
-        $pessoa->setCargo_Funcionario($_POST['cargo']);
         $pessoa->setSenha($_POST['confirmeSenha']);
         $pessoa->setIdPerfil(2);
-
+        
+        $funcionario = new Funcionario();
+        $funcionario->setSalario(str_replace(",", ".", $_POST['salario']));
+        $funcionario->setCargo($_POST['cargo']);
+        $funcionario->setMatricula($_POST['dia'] . substr($_POST['cpf'] , -5) . substr($_POST['ano'] , -2));
+        
+        $professor = new Professor;
+        $professor->setProf($_POST['prof']);
+        
         include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '../dao/agendabusca.php';
         $agendaBusca = new AgendaBusca();
         $aulas = $agendaBusca->verificarcpf($pessoa->getCpf());
-
+ 
+        $o = "10";
+        $a ="11";
         if ($aulas == 1) {
             $mensagem = "Não foi possível cadastrar funcionário! O CPF informado já está cadastrado.";
         } else {
-            $mensagem = $this->dao->salvar($pessoa);
+            if(strcmp($pessoa->getTelefoneCelular() , $pessoa->getTelefoneResidencial()) == 0){
+                $mensagem =  "Não foi possível cadastrar funcionário! Os Telefones informados devem ser diferentes.";
+            }else{
+                $mensagem = $this->dao->salvar($pessoa, $funcionario, $professor);
+            }
         }
-
         header("location: /StudioTopFit/funcionario/listar.php?msg=" . $mensagem);
     }
 

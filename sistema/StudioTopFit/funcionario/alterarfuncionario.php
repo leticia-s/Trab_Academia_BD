@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
@@ -86,16 +86,6 @@
         </script>
 
         <link href="/StudioTopFit/css/bootstrap.min.css" rel="stylesheet">
-        <style> body{background-color: #E3E3E3;}
-            legend { 
-                background :  #496B96 ; 
-                color :  #fff ; 
-                padding :  2px  115px  ; 
-                font-size :  19px ; 
-                border-radius :  10px ; 
-                font-weight:  bold;
-            }
-        </style>
     </head>
     <body>
 

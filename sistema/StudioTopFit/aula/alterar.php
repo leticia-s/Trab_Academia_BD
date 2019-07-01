@@ -1,6 +1,5 @@
 <?php
 session_start();
-$idcpf = $_SESSION['id_pessoa_cpf'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -8,34 +7,39 @@ $idcpf = $_SESSION['id_pessoa_cpf'];
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>STUDIO TOP FIT - Editar peso</title>
+        <title>STUDIO TOP FIT - Alterar Tipo de Aula</title>
         <script type="text/javascript" src="/StudioTopFit/js/jquery-2.1.4.min.js"></script>
         <script type="text/javascript" src="js/jquery.validate.js"></script>
         <script type="text/javascript" src="/StudioTopFit/js/inputmask.js"></script>
         <script type="text/javascript" src="/StudioTopFit/js/jquery.inputmask.js"></script>
         <script src="js/bootstrap.min.js"></script>
-        <link href="/StudioTopFit/css/bootstrap.min.css" rel="stylesheet">
-        <style> body{background-color: #E3E3E3;}
-            legend { 
-                background :  #496B96 ; 
-                color :  #fff ; 
-                padding :  2px  115px  ; 
-                font-size :  19px ; 
-                border-radius :  10px ; 
-                font-weight:  bold;
+        <?php
+            $idaula = "";
+            if (isset($_GET['idaula'])) {
+                $idaula = $_GET['idaula'];
+                $nome = $_GET['nome'];
+                $_SESSION['idaula'] = $idaula;
+                $_SESSION['nome'] = $nome;
+            } else {
+                $idaula = $_SESSION['idaula'];
+                $nome = $_SESSION['nome'];
             }
-        </style>
+            ?>
+        <link href="/StudioTopFit/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
         <div class="container">
-            <form class="form-horizontal" action="/StudioTopFit/controller/controlleraluno.php?operacao=salvarpeso&idcpf=<?php echo $idcpf; ?>" method="POST">
-                <!-- Form Name -->
-                <legend>Editar peso atual</legend>
+            <form class="form-horizontal" action="/StudioTopFit/controller/controlleraula.php?operacao=alterar&idaula=<?php echo $idaula;?>" method="POST" onsubmit="">
 
+
+                <!-- Form Name -->
+                <legend>Alterar Aula</legend>
+
+                <!-- Text input-->
                 <div class="form-group">
-                    <label class="col-md-4 control-label" for="nome">Peso atual:</label>  
-                    <div class="col-md-4">
-                        <input id="peso" name="peso" type="text" style="width: 125px;" maxlength="7" placeholder="Digite seu peso atual" class="form-control input-md" required="">
+                    <label class="col-md-4 control-label" for="nome">Aula:</label>  
+                    <div class="col-md-2">
+                        <input id="nome" value="<?php echo $nome; ?>" name="nome" maxlength="15"  style="width: 170px;" type="text" placeholder="Digite a aula" class="form-control input-md" required="" >
 
                     </div>
                 </div>
@@ -44,14 +48,10 @@ $idcpf = $_SESSION['id_pessoa_cpf'];
                     <label class="col-md-4 control-label" for="enviar"></label>
                     <div class="col-md-8">
                         <button id="enviar" type="submit" name="enviar" class="btn btn-success">Enviar</button>
-                        <a id="cancelar" name="cancelar" href="peso.php" class="btn btn-danger">Cancelar</a>
+                        <button id="limpar" name="limpar" type="reset" class="btn btn-warning">Limpar</button>
                     </div>
                 </div>
             </form>
-
-
         </div>
-
-
     </body>
 </html>
