@@ -24,7 +24,7 @@ USE `db_studiotopfit` ;
 DROP TABLE IF EXISTS `db_studiotopfit`.`tb_pessoa` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_pessoa` (
-  `cpf` INT(11) NOT NULL,
+  `cpf` BIGINT(11) NOT NULL,
   `nome` VARCHAR(15) NOT NULL,
   `sobrenome` VARCHAR(45) NOT NULL,
   `sexo` TINYINT(1) NOT NULL,
@@ -57,7 +57,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `db_studiotopfit`.`usuario` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`usuario` (
-  `id_pessoa_cpf` INT(11) NOT NULL,
+  `id_pessoa_cpf` BIGINT(11) NOT NULL,
   `perfil_idperfil` INT(4) NOT NULL,
   `senha` VARCHAR(45) NOT NULL,
   `usuario` VARCHAR(15) NOT NULL,
@@ -84,7 +84,7 @@ DROP TABLE IF EXISTS `db_studiotopfit`.`tb_funcionario` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_funcionario` (
   `id_matricula` INT(9) NOT NULL,
-  `id_pessoa_cpf` INT(11) NOT NULL,
+  `id_pessoa_cpf` BIGINT(11) NOT NULL,
   `cargo` VARCHAR(30) NOT NULL,
   `salario` DECIMAL(7,2) NOT NULL,
   INDEX `fk_tb_funcionario_tb_pessoa1_idx` (`id_pessoa_cpf` ASC) ,
@@ -104,7 +104,7 @@ DROP TABLE IF EXISTS `db_studiotopfit`.`tb_aluno` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_aluno` (
   `id_matricula` INT(9) NOT NULL,
-  `id_pessoa_cpf` INT(11) NOT NULL,
+  `id_pessoa_cpf` BIGINT(11) NOT NULL,
   `data_entrada` DATE NOT NULL,
   `foto` BLOB NOT NULL,
   PRIMARY KEY (`id_matricula`),
@@ -221,7 +221,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `db_studiotopfit`.`tb_pessoa_telefone` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_pessoa_telefone` (
-  `tb_pessoa_cpf` INT(11) NOT NULL,
+  `tb_pessoa_cpf` BIGINT(11) NOT NULL,
   `telefone` VARCHAR(18) NOT NULL,
   INDEX `fk_tb_pessoa_telefone_tb_pessoa1_idx` (`tb_pessoa_cpf` ASC) ,
   PRIMARY KEY (`tb_pessoa_cpf`, `telefone`),
@@ -318,6 +318,14 @@ CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`lista_turma` (`dia_da_semana` INT,
 -- CREATE  OR REPLACE VIEW `lista_turma` AS SELECT t.dia_da_semana, t.horario_inicial, t.horario_final, a.nome, s.localizacao, ps.nome
 -- FROM tb_turma AS t, tb_sala AS s, tb_aula AS a, tb_turma_professor AS tp, tb_pessoa AS ps
 -- WHERE t.tb_sala_id_sala = s.id_sala AND t.aula_id_aula = a.id_aula AND t.id_codigo = tp.tb_turma_id_codigo AND ps.cpf = tp.tb_professor_tb_funcionario_id_pessoa_cpf;
+
+-- -----------------------------------------------------
+-- INSERT ADMIN LOGIN
+-- -----------------------------------------------------
+INSERT INTO perfil (idperfil, perfil) VALUES (3, 'Administrador');
+INSERT INTO tb_pessoa (cpf, nome, sobrenome, sexo, data_nascimento, endereco, uf, cidade, bairro, rg, email) VALUES ('11111111111', 'admin', 'admin', '0', '1999-01-01', '', 'DF', 'Brasília', '', '', 'admin@admin.com');
+INSERT INTO usuario (id_pessoa_cpf, perfil_idperfil, senha, usuario) VALUES ('11111111111', 3, '25f9e794323b453885f5181f1b624d0b', 'admin');
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
