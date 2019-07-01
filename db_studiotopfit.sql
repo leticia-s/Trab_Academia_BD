@@ -83,7 +83,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `db_studiotopfit`.`tb_funcionario` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_funcionario` (
-  `id_matricula` INT(9) NOT NULL,
+  `id_matricula` INT(9) NOT NULL AUTO_INCREMENT,
   `id_pessoa_cpf` BIGINT(11) NOT NULL,
   `cargo` VARCHAR(30) NOT NULL,
   `salario` DECIMAL(7,2) NOT NULL,
@@ -103,28 +103,16 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `db_studiotopfit`.`tb_aluno` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_aluno` (
-  `id_matricula` INT(9) NOT NULL,
+  `id_matricula` INT(9) NOT NULL AUTO_INCREMENT,
   `id_pessoa_cpf` BIGINT(11) NOT NULL,
-  `data_entrada` DATE NOT NULL,
-  `foto` BLOB NOT NULL,
+  `data_entrada` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `foto` BLOB,
   PRIMARY KEY (`id_matricula`),
   CONSTRAINT `fk_tb_aluno_tb_pessoa1`
     FOREIGN KEY (`id_pessoa_cpf`)
     REFERENCES `db_studiotopfit`.`tb_pessoa` (`cpf`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `db_studiotopfit`.`tb_local`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `db_studiotopfit`.`tb_local` ;
-
-CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_local` (
-  `id_local` INT(4) NOT NULL AUTO_INCREMENT,
-  `localizacao` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id_local`))
 ENGINE = InnoDB;
 
 
@@ -139,6 +127,17 @@ CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_aula` (
   PRIMARY KEY (`id_aula`))
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `db_studiotopfit`.`tb_sala`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `db_studiotopfit`.`tb_sala` ;
+
+CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_sala` (
+  `id_sala` INT(4) NOT NULL AUTO_INCREMENT,
+  `localizacao` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id_sala`))
+ENGINE = InnoDB;
+
 
 -- -----------------------------------------------------
 -- Table `db_studiotopfit`.`tb_turma`
@@ -146,8 +145,8 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `db_studiotopfit`.`tb_turma` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_turma` (
-  `id_codigo` INT(4) NOT NULL,
-  `tb_local_id_local` INT(4) NOT NULL,
+  `id_codigo` INT(4) NOT NULL AUTO_INCREMENT,
+  `tb_sala_id_sala` INT(4) NOT NULL,
   `aula_id_aula` INT(4) NOT NULL,
   `dia_da_semana` INT(1) NOT NULL,
   `horario_inicial` TIME NOT NULL,
@@ -155,11 +154,11 @@ CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_turma` (
   `descricao` VARCHAR(250),
   `qtdMax` INT(3) NOT NULL,
   PRIMARY KEY (`id_codigo`),
-  INDEX `fk_tb_turma_tb_local_id_local_turma` (`tb_local_id_local` ASC),
+  INDEX `fk_tb_turma_tb_sala_id_sala_turma` (`tb_sala_id_sala` ASC),
   INDEX `fk_tb_turma_aula_id_aula` (`aula_id_aula` ASC),
-  CONSTRAINT `fk_tb_turma_tb_local_id_local_turma`
-	FOREIGN KEY (`tb_local_id_local`) 
-	REFERENCES `db_studiotopfit`.`tb_local` (`id_local`)
+  CONSTRAINT `fk_tb_turma_tb_sala_id_sala_turma`
+	FOREIGN KEY (`tb_sala_id_sala`) 
+	REFERENCES `db_studiotopfit`.`tb_sala` (`id_sala`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tb_turma_aula_id_aula`
@@ -210,12 +209,12 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `db_studiotopfit`.`tb_pessoa_telefone` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_pessoa_telefone` (
-  `id_pessoa_cpf` BIGINT(11) NOT NULL,
+  `tb_pessoa_cpf` BIGINT(11) NOT NULL,
   `telefone` VARCHAR(18) NOT NULL,
-  INDEX `fk_tb_pessoa_telefone_tb_pessoa1_idx` (`id_pessoa_cpf` ASC) ,
-  PRIMARY KEY (`id_pessoa_cpf`, `telefone`),
+  INDEX `fk_tb_pessoa_telefone_tb_pessoa1_idx` (`tb_pessoa_cpf` ASC) ,
+  PRIMARY KEY (`tb_pessoa_cpf`, `telefone`),
   CONSTRAINT `fk_tb_pessoa_telefone_tb_pessoa1`
-    FOREIGN KEY (`id_pessoa_cpf`)
+    FOREIGN KEY (`tb_pessoa_cpf`)
     REFERENCES `db_studiotopfit`.`tb_pessoa` (`cpf`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -301,19 +300,153 @@ CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`lista_turma` (`dia_da_semana` INT,
 -- -----------------------------------------------------
 -- View `db_studiotopfit`.`lista_turma`
 -- -----------------------------------------------------
--- DROP TABLE IF EXISTS `db_studiotopfit`.`lista_turma`;
--- DROP VIEW IF EXISTS `db_studiotopfit`.`lista_turma` ;
--- USE `db_studiotopfit`;
--- CREATE  OR REPLACE VIEW `lista_turma` AS SELECT t.dia_da_semana, t.horario_inicial, t.horario_final, a.nome, s.localizacao, ps.nome
--- FROM tb_turma AS t, tb_local AS s, tb_aula AS a, tb_turma_professor AS tp, tb_pessoa AS ps
--- WHERE t.tb_local_id_local = s.id_local AND t.aula_id_aula = a.id_aula AND t.id_codigo = tp.tb_turma_id_codigo AND ps.cpf = tp.tb_professor_tb_funcionario_id_pessoa_cpf;
+DROP TABLE IF EXISTS `db_studiotopfit`.`lista_turma`;
+DROP VIEW IF EXISTS `db_studiotopfit`.`lista_turma` ;
+USE `db_studiotopfit`;
+CREATE  OR REPLACE VIEW `lista_turma` AS SELECT 
+CASE t.dia_da_semana
+    WHEN 0 THEN 'Domingo'
+    WHEN 1 THEN 'Segunda-Feira'
+    WHEN 2 THEN 'Terça-Feira'
+    WHEN 3 THEN 'Quarta-Feira'
+    WHEN 4 THEN 'Quinta-Feira'
+    WHEN 5 THEN 'Sexta-Feira'
+    WHEN 6 THEN 'Sábado'
+END AS 'Dia da semana', 
+t.horario_inicial AS 'Horário de início', t.horario_final AS 'Horário de término', a.nome AS 'Aula', GROUP_CONCAT(s.localizacao) AS 'Sala', GROUP_CONCAT(ps.nome) AS 'Professor(es)', COUNT(ta.tb_aluno_id_matricula) AS 'Qtd. Alunos', t.descricao AS 'Descrição'
+FROM tb_sala AS s, tb_aula AS a, tb_turma_has_tb_professor AS tp, tb_pessoa AS ps, tb_funcionario AS tf, tb_turma AS t
+LEFT JOIN tb_turma_has_tb_aluno AS ta ON ta.tb_turma_id_codigo = t.id_codigo
+WHERE t.tb_sala_id_sala = s.id_sala 
+AND t.aula_id_aula = a.id_aula 
+AND t.id_codigo = tp.tb_turma_id_codigo 
+AND tp.tb_turma_id_codigo = t.id_codigo
+AND tf.id_matricula = tp.tb_professor_tb_funcionario_id_matricula
+AND ps.cpf = tf.id_pessoa_cpf
+GROUP BY t.id_codigo;
 
+
+-- -----------------------------------------------------
+-- Procedure `db_studiotopfit`.`create_class`
+-- -----------------------------------------------------
+DELIMITER $$
+CREATE PROCEDURE create_class(
+    IN sala_localizacao VARCHAR(45),
+    IN titulo_aula VARCHAR(45),
+    IN dia_semana VARCHAR(20),
+    IN horario_inicial TIME,
+    in horario_final TIME,
+    IN descricao VARCHAR(250),
+    IN quantidade_alunos INT(3),
+    IN email_professor VARCHAR(100))
+BEGIN
+    DECLARE dia_da_semana INT(1) DEFAULT 0;
+    DECLARE professor_matricula INT(9) DEFAULT 0;
+    DECLARE id_sala INT(4) DEFAULT 0;
+    DECLARE id_aula INT(4) DEFAULT 0;
+    DECLARE id_turma INT(4) DEFAULT 0;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        GET CURRENT DIAGNOSTICS CONDITION 1 @P1 = MYSQL_ERRNO, @P2 = MESSAGE_TEXT;
+        SELECT @P1 AS 'Código', @P2 AS 'Mensagem';
+        ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+        CASE dia_semana
+            WHEN 'Domingo' THEN SET dia_da_semana = 0;
+            WHEN 'Segunda-Feira' THEN SET dia_da_semana = 1;
+            WHEN 'Terça-Feira' THEN SET dia_da_semana = 2;
+            WHEN 'Quarta-Feira' THEN SET dia_da_semana = 3;
+            WHEN 'Quinta-Feira' THEN SET dia_da_semana = 4;
+            WHEN 'Sexta-Feira' THEN SET dia_da_semana = 5;
+            WHEN 'Sábado' THEN SET dia_da_semana = 6;
+        END CASE;
+
+        SELECT f.id_matricula INTO professor_matricula
+        FROM tb_funcionario AS f 
+        INNER JOIN tb_pessoa AS p ON f.id_pessoa_cpf = p.cpf
+        INNER JOIN tb_professor AS tp ON tp.tb_funcionario_id_matricula = f.id_matricula
+        WHERE p.email=email_professor;
+
+        INSERT INTO tb_sala (localizacao) VALUES (sala_localizacao);
+        SELECT LAST_INSERT_ID() INTO id_sala;
+
+        INSERT INTO tb_aula (nome) VALUES (titulo_aula);
+        SELECT LAST_INSERT_ID() INTO id_aula;
+
+        INSERT INTO tb_turma (tb_sala_id_sala, aula_id_aula, dia_da_semana, horario_inicial, horario_final, descricao, qtdMax)
+        VALUES (id_sala, id_aula, dia_da_semana, horario_inicial, horario_final, descricao, quantidade_alunos);
+        SELECT LAST_INSERT_ID() INTO id_turma;
+
+        INSERT INTO tb_turma_has_tb_professor (tb_turma_id_codigo, tb_professor_tb_funcionario_id_matricula)
+        VALUES (id_turma, professor_matricula);
+    COMMIT;
+END $$
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- Procedure `db_studiotopfit`.`create_user`
+-- -----------------------------------------------------
+DELIMITER $$
+CREATE PROCEDURE create_user(
+    IN type_user VARCHAR(25), 
+    IN cpf BIGINT(11), 
+    IN nome VARCHAR(15), 
+    IN sobrenome VARCHAR(45), 
+    IN sexo TINYINT(1), 
+    IN data_nascimento DATE, 
+    IN endereco VARCHAR(80), 
+    IN uf VARCHAR(2), 
+    IN cidade VARCHAR(15), 
+    IN bairro VARCHAR(25), 
+    IN rg VARCHAR(20), 
+    IN email VARCHAR(100), 
+    IN username VARCHAR(15), 
+    IN password VARCHAR(45),
+    IN cargo VARCHAR(30),
+    IN salario DECIMAL(7, 2))
+BEGIN
+    DECLARE user_type INT(4) DEFAULT 0;
+    DECLARE id_matricula INT(4) DEFAULT 0;
+    DECLARE errno INT;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        GET CURRENT DIAGNOSTICS CONDITION 1 @P1 = MYSQL_ERRNO, @P2 = MESSAGE_TEXT;
+        SELECT @P1 AS 'Código', @P2 AS 'Mensagem';
+        ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+        SELECT idperfil INTO user_type FROM `perfil` WHERE perfil=type_user ORDER BY idperfil DESC LIMIT 1;
+        INSERT INTO `tb_pessoa` (cpf, nome, sobrenome, sexo, data_nascimento, endereco, uf, cidade, bairro, rg, email) 
+        VALUES (cpf, nome, sobrenome, sexo, data_nascimento, endereco, uf, cidade, bairro, rg, email);
+        INSERT INTO `usuario` (id_pessoa_cpf, perfil_idperfil, senha, usuario)
+        VALUES (cpf, user_type, MD5(password), username);
+        
+        CASE type_user
+            WHEN 'Aluno' THEN INSERT INTO `tb_aluno` (id_pessoa_cpf) VALUES (cpf);
+            WHEN 'Funcionário' THEN
+                BEGIN
+                    INSERT INTO `tb_funcionario` (id_pessoa_cpf, cargo, salario) VALUES (cpf, cargo, salario);
+                    SELECT LAST_INSERT_ID() INTO id_matricula;
+
+                    CASE cargo 
+                        WHEN 'Professor' THEN INSERT INTO tb_professor (tb_funcionario_id_matricula) VALUES (id_matricula);
+                        ELSE BEGIN END;  
+                    END CASE;
+                END;
+            ELSE BEGIN END;
+        END CASE;
+    COMMIT;
+END $$
+DELIMITER ;
 -- -----------------------------------------------------
 -- INSERT ADMIN LOGIN
 -- -----------------------------------------------------
+INSERT INTO perfil (idperfil, perfil) VALUES (1, 'Aluno');
+INSERT INTO perfil (idperfil, perfil) VALUES (2, 'Funcionário');
 INSERT INTO perfil (idperfil, perfil) VALUES (3, 'Administrador');
-INSERT INTO tb_pessoa (cpf, nome, sobrenome, sexo, data_nascimento, endereco, uf, cidade, bairro, rg, email) VALUES ('11111111111', 'admin', 'admin', '0', '1999-01-01', '', 'DF', 'Brasília', '', '', 'admin@admin.com');
-INSERT INTO usuario (id_pessoa_cpf, perfil_idperfil, senha, usuario) VALUES ('11111111111', 3, '25f9e794323b453885f5181f1b624d0b', 'admin');
+CALL create_user('Administrador', 11111111111, 'admin', 'admin', 1, '1996-01-01', '', 'DF', 'Brasília', 'UnB', '1111111', 'admin@admin.com', 'admin', '123456789', '', 0);
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
