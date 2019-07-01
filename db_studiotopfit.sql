@@ -24,7 +24,7 @@ USE `db_studiotopfit` ;
 DROP TABLE IF EXISTS `db_studiotopfit`.`tb_pessoa` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_pessoa` (
-  `cpf` VARCHAR(11) NOT NULL,
+  `cpf` INT(11) NOT NULL,
   `nome` VARCHAR(15) NOT NULL,
   `sobrenome` VARCHAR(45) NOT NULL,
   `sexo` TINYINT(1) NOT NULL,
@@ -57,7 +57,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `db_studiotopfit`.`usuario` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`usuario` (
-  `id_pessoa_cpf` VARCHAR(11) NOT NULL,
+  `id_pessoa_cpf` INT(11) NOT NULL,
   `perfil_idperfil` INT(4) NOT NULL,
   `senha` VARCHAR(45) NOT NULL,
   `usuario` VARCHAR(15) NOT NULL,
@@ -84,7 +84,7 @@ DROP TABLE IF EXISTS `db_studiotopfit`.`tb_funcionario` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_funcionario` (
   `id_matricula` INT(9) NOT NULL,
-  `id_pessoa_cpf` VARCHAR(11) NOT NULL,
+  `id_pessoa_cpf` INT(11) NOT NULL,
   `cargo` VARCHAR(30) NOT NULL,
   `salario` DECIMAL(7,2) NOT NULL,
   INDEX `fk_tb_funcionario_tb_pessoa1_idx` (`id_pessoa_cpf` ASC) ,
@@ -104,7 +104,7 @@ DROP TABLE IF EXISTS `db_studiotopfit`.`tb_aluno` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_aluno` (
   `id_matricula` INT(9) NOT NULL,
-  `id_pessoa_cpf` VARCHAR(11) NOT NULL,
+  `id_pessoa_cpf` INT(11) NOT NULL,
   `data_entrada` DATE NOT NULL,
   `foto` BLOB NOT NULL,
   PRIMARY KEY (`id_matricula`),
@@ -157,12 +157,14 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `db_studiotopfit`.`tb_turma` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_turma` (
-  `id_codigo` INT NOT NULL,
-  `tb_sala_id_sala` INT NOT NULL,
-  `aula_id_aula` INT NOT NULL,
-  `dia_da_semana` INT NOT NULL,
-  `horario_inicial` INT NOT NULL,
-  `horario_final` INT NOT NULL, 
+  `id_codigo` INT(4) NOT NULL,
+  `tb_sala_id_sala` INT(4) NOT NULL,
+  `aula_id_aula` INT(4) NOT NULL,
+  `dia_da_semana` INT(1) NOT NULL,
+  `horario_inicial` TIME NOT NULL,
+  `horario_final` TIME NOT NULL, 
+  `descricao` VARCHAR(250),
+  `qtdMax` INT(3) NOT NULL,
   PRIMARY KEY (`id_codigo`),
   INDEX `fk_tb_turma_tb_sala_id_sala_turma` (`tb_sala_id_sala` ASC),
   INDEX `fk_tb_turma_aula_id_aula` (`aula_id_aula` ASC),
@@ -219,7 +221,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `db_studiotopfit`.`tb_pessoa_telefone` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_pessoa_telefone` (
-  `tb_pessoa_cpf` VARCHAR(11) NOT NULL,
+  `tb_pessoa_cpf` INT(11) NOT NULL,
   `telefone` VARCHAR(18) NOT NULL,
   INDEX `fk_tb_pessoa_telefone_tb_pessoa1_idx` (`tb_pessoa_cpf` ASC) ,
   PRIMARY KEY (`tb_pessoa_cpf`, `telefone`),
