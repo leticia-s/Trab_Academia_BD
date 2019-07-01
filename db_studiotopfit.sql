@@ -290,6 +290,28 @@ CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_turma_has_tb_aluno` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `db_studiotopfit`.`tb_auditoria_pagamento`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `db_studiotopfit`.`tb_auditoria_pagamento` ;
+
+CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_auditoria_pagamento` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `data_log` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id_matricula` INT(4) NOT NULL,
+  `coluna_alterada` VARCHAR(30) NOT NULL,
+  `valor_antigo` VARCHAR(250) NOT NULL,
+  `novo_valor` VARCHAR(250) NOT NULL,
+  `mysql_user` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_tb_auditoria_pagamento_tb_aluno_idx` (`id_matricula` ASC) ,
+  CONSTRAINT `fk_tb_auditoria_pagamento_tb_aluno1`
+    FOREIGN KEY (`id_matricula`)
+    REFERENCES `db_studiotopfit`.`tb_aluno` (`id_matricula`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 USE `db_studiotopfit` ;
 
 -- -----------------------------------------------------
@@ -304,7 +326,7 @@ DROP TABLE IF EXISTS `db_studiotopfit`.`lista_turma`;
 DROP VIEW IF EXISTS `db_studiotopfit`.`lista_turma` ;
 USE `db_studiotopfit`;
 CREATE  OR REPLACE VIEW `lista_turma` AS SELECT 
-CASE t.dia_da_semana
+GROUP_CONCAT(CASE t.dia_da_semana
     WHEN 0 THEN 'Domingo'
     WHEN 1 THEN 'Segunda-Feira'
     WHEN 2 THEN 'Terça-Feira'
@@ -312,8 +334,8 @@ CASE t.dia_da_semana
     WHEN 4 THEN 'Quinta-Feira'
     WHEN 5 THEN 'Sexta-Feira'
     WHEN 6 THEN 'Sábado'
-END AS 'Dia da semana', 
-t.horario_inicial AS 'Horário de início', t.horario_final AS 'Horário de término', a.nome AS 'Aula', GROUP_CONCAT(s.localizacao) AS 'Sala', GROUP_CONCAT(ps.nome) AS 'Professor(es)', COUNT(ta.tb_aluno_id_matricula) AS 'Qtd. Alunos', t.descricao AS 'Descrição'
+END) AS 'Dia da semana', 
+GROUP_CONCAT(t.horario_inicial) AS 'Horário de início', GROUP_CONCAT(t.horario_final) AS 'Horário de término', GROUP_CONCAT(a.nome) AS 'Aula', GROUP_CONCAT(s.localizacao) AS 'Sala', GROUP_CONCAT(ps.nome) AS 'Professor(es)', COUNT(ta.tb_aluno_id_matricula) AS 'Qtd. Alunos', GROUP_CONCAT(t.descricao) AS 'Descrição'
 FROM tb_sala AS s, tb_aula AS a, tb_turma_has_tb_professor AS tp, tb_pessoa AS ps, tb_funcionario AS tf, tb_turma AS t
 LEFT JOIN tb_turma_has_tb_aluno AS ta ON ta.tb_turma_id_codigo = t.id_codigo
 WHERE t.tb_sala_id_sala = s.id_sala 
@@ -439,6 +461,17 @@ BEGIN
         END CASE;
     COMMIT;
 END $$
+DELIMITER ;
+-- -----------------------------------------------------
+-- TRIGGER
+-- -----------------------------------------------------
+DROP TRIGGER IF EXISTS paymenttrigger;
+DELIMITER //
+CREATE TRIGGER `paymenttrigger` BEFORE UPDATE ON `tb_pagamento` FOR EACH ROW 
+IF (OLD.valor <> NEW.valor) THEN
+    INSERT INTO tb_auditoria_pagamento (mysql_user, id_matricula, coluna_alterada, valor_antigo, novo_valor) 
+    VALUES (CURRENT_USER(), OLD.id_matricula, 'valor', OLD.valor, NEW.valor);
+END IF;//
 DELIMITER ;
 -- -----------------------------------------------------
 -- INSERT ADMIN LOGIN
