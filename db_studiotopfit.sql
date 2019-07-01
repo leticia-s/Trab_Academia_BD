@@ -128,14 +128,14 @@ CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_aula` (
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `db_studiotopfit`.`tb_local`
+-- Table `db_studiotopfit`.`tb_sala`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `db_studiotopfit`.`tb_local` ;
+DROP TABLE IF EXISTS `db_studiotopfit`.`tb_sala` ;
 
-CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_local` (
-  `id_local` INT(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_sala` (
+  `id_sala` INT(4) NOT NULL AUTO_INCREMENT,
   `localizacao` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id_local`))
+  PRIMARY KEY (`id_sala`))
 ENGINE = InnoDB;
 
 
@@ -146,7 +146,7 @@ DROP TABLE IF EXISTS `db_studiotopfit`.`tb_turma` ;
 
 CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_turma` (
   `id_codigo` INT(4) NOT NULL AUTO_INCREMENT,
-  `tb_local_id_local` INT(4) NOT NULL,
+  `tb_sala_id_sala` INT(4) NOT NULL,
   `aula_id_aula` INT(4) NOT NULL,
   `dia_da_semana` INT(1) NOT NULL,
   `horario_inicial` TIME NOT NULL,
@@ -154,11 +154,11 @@ CREATE TABLE IF NOT EXISTS `db_studiotopfit`.`tb_turma` (
   `descricao` VARCHAR(250),
   `qtdMax` INT(3) NOT NULL,
   PRIMARY KEY (`id_codigo`),
-  INDEX `fk_tb_turma_tb_local_id_local_turma` (`tb_local_id_local` ASC),
+  INDEX `fk_tb_turma_tb_sala_id_sala_turma` (`tb_sala_id_sala` ASC),
   INDEX `fk_tb_turma_aula_id_aula` (`aula_id_aula` ASC),
-  CONSTRAINT `fk_tb_turma_tb_local_id_local_turma`
-	FOREIGN KEY (`tb_local_id_local`) 
-	REFERENCES `db_studiotopfit`.`tb_local` (`id_local`)
+  CONSTRAINT `fk_tb_turma_tb_sala_id_sala_turma`
+	FOREIGN KEY (`tb_sala_id_sala`) 
+	REFERENCES `db_studiotopfit`.`tb_sala` (`id_sala`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tb_turma_aula_id_aula`
@@ -335,10 +335,10 @@ GROUP_CONCAT(CASE t.dia_da_semana
     WHEN 5 THEN 'Sexta-Feira'
     WHEN 6 THEN 'Sábado'
 END) AS 'Dia da semana', 
-GROUP_CONCAT(t.horario_inicial) AS 'Horário de início', GROUP_CONCAT(t.horario_final) AS 'Horário de término', GROUP_CONCAT(a.nome) AS 'Aula', GROUP_CONCAT(s.localizacao) AS 'local', GROUP_CONCAT(ps.nome) AS 'Professor(es)', COUNT(ta.tb_aluno_id_matricula) AS 'Qtd. Alunos', GROUP_CONCAT(t.descricao) AS 'Descrição'
-FROM tb_local AS s, tb_aula AS a, tb_turma_has_tb_professor AS tp, tb_pessoa AS ps, tb_funcionario AS tf, tb_turma AS t
+GROUP_CONCAT(t.horario_inicial) AS 'Horário de início', GROUP_CONCAT(t.horario_final) AS 'Horário de término', GROUP_CONCAT(a.nome) AS 'Aula', GROUP_CONCAT(s.localizacao) AS 'Sala', GROUP_CONCAT(ps.nome) AS 'Professor(es)', COUNT(ta.tb_aluno_id_matricula) AS 'Qtd. Alunos', GROUP_CONCAT(t.descricao) AS 'Descrição'
+FROM tb_sala AS s, tb_aula AS a, tb_turma_has_tb_professor AS tp, tb_pessoa AS ps, tb_funcionario AS tf, tb_turma AS t
 LEFT JOIN tb_turma_has_tb_aluno AS ta ON ta.tb_turma_id_codigo = t.id_codigo
-WHERE t.tb_local_id_local = s.id_local 
+WHERE t.tb_sala_id_sala = s.id_sala 
 AND t.aula_id_aula = a.id_aula 
 AND t.id_codigo = tp.tb_turma_id_codigo 
 AND tp.tb_turma_id_codigo = t.id_codigo
@@ -352,7 +352,7 @@ GROUP BY t.id_codigo;
 -- -----------------------------------------------------
 DELIMITER $$
 CREATE PROCEDURE create_class(
-    IN local_localizacao VARCHAR(45),
+    IN sala_localizacao VARCHAR(45),
     IN titulo_aula VARCHAR(45),
     IN dia_semana VARCHAR(20),
     IN horario_inicial TIME,
@@ -363,7 +363,7 @@ CREATE PROCEDURE create_class(
 BEGIN
     DECLARE dia_da_semana INT(1) DEFAULT 0;
     DECLARE professor_matricula INT(9) DEFAULT 0;
-    DECLARE id_local INT(4) DEFAULT 0;
+    DECLARE id_sala INT(4) DEFAULT 0;
     DECLARE id_aula INT(4) DEFAULT 0;
     DECLARE id_turma INT(4) DEFAULT 0;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -390,14 +390,14 @@ BEGIN
         INNER JOIN tb_professor AS tp ON tp.tb_funcionario_id_matricula = f.id_matricula
         WHERE p.email=email_professor;
 
-        INSERT INTO tb_local (localizacao) VALUES (local_localizacao);
-        SELECT LAST_INSERT_ID() INTO id_local;
+        INSERT INTO tb_sala (localizacao) VALUES (sala_localizacao);
+        SELECT LAST_INSERT_ID() INTO id_sala;
 
         INSERT INTO tb_aula (nome) VALUES (titulo_aula);
         SELECT LAST_INSERT_ID() INTO id_aula;
 
-        INSERT INTO tb_turma (tb_local_id_local, aula_id_aula, dia_da_semana, horario_inicial, horario_final, descricao, qtdMax)
-        VALUES (id_local, id_aula, dia_da_semana, horario_inicial, horario_final, descricao, quantidade_alunos);
+        INSERT INTO tb_turma (tb_sala_id_sala, aula_id_aula, dia_da_semana, horario_inicial, horario_final, descricao, qtdMax)
+        VALUES (id_sala, id_aula, dia_da_semana, horario_inicial, horario_final, descricao, quantidade_alunos);
         SELECT LAST_INSERT_ID() INTO id_turma;
 
         INSERT INTO tb_turma_has_tb_professor (tb_turma_id_codigo, tb_professor_tb_funcionario_id_matricula)
