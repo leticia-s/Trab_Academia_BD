@@ -1,58 +1,64 @@
 <?php
 
 include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '../classes/pessoa.php';
-include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '../classes/funcionario_e_professor.php';
+include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '../classes/funcionario.php';
 include_once 'dao.php';
 
 class FuncionarioDao extends Dao {
 
-    function salvar($pessoa, $funcionario, $professor) {
-        //tabela pessoa
+    function salvar($pessoa, $funcionario, $cursosProf) {
+        //Procedure adicionar tabela pessoa, usuario, perfil, professor, funcionario
         $pdo = Dao::getInstance();
         $pdo->beginTransaction();
-        $sql = "INSERT INTO tb_pessoa(nome, sobrenome, sexo, data_nascimento,endereco, uf, cidade, bairro, cpf, rg, email) ";
-        $sql .= " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); ";
+        $sql = "CALL create_user(?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,? ,? ,?, ? ,?)";
         $stmt = $pdo->prepare($sql);
-        $valores = array($pessoa->getNome(), $pessoa->getSobrenome(), $pessoa->getSexo(), $pessoa->getDataNascimento(), $pessoa->getEndereco(), $pessoa->getUf(), $pessoa->getCidade(), $pessoa->getBairro(), $pessoa->getCpf(), $pessoa->getRg(), $pessoa->getEmail());
-
+        $valores = array($funcionario->getProf(), $pessoa->getCpf(), $pessoa->getNome(), $pessoa->getSobrenome(), $pessoa->getSexo(), $pessoa->getDataNascimento(), $pessoa->getEndereco(), $pessoa->getUf(), $pessoa->getCidade(), $pessoa->getBairro(), $pessoa->getRg(), $pessoa->getEmail(),$pessoa->getNome(), $pessoa->getSenha(), $funcionario->getCargo(), $funcionario->getSalario());
+        echo $sql;
+        for($i=0;$i<16;$i++){
+        echo "'". $valores[$i] . "', ";}
         //tabela telefones
-        $sql4 = "INSERT INTO tb_pessoa_telefone(id_pessoa_cpf, telefone) ";
-        $sql4 .= " VALUES (?, ?); ";
-        $stmt4 = $pdo->prepare($sql4);
-        $valores4 = array($pessoa->getCpf(),$pessoa->getTelefoneCelular());
-        $sql5 = "INSERT INTO tb_pessoa_telefone(id_pessoa_cpf, telefone) ";
-        $sql5 .= " VALUES (?, ?); ";
-        $stmt5 = $pdo->prepare($sql5);
-        $valores5 = array($pessoa->getCpf(),$pessoa->getTelefoneResidencial());
+        $sql2 = "INSERT INTO tb_pessoa_telefone(id_pessoa_cpf, telefone) ";
+        $sql2 .= "VALUES (?, ?);";
+        $stmt2 = $pdo->prepare($sql2);
+        $valores2 = array($pessoa->getCpf(),$pessoa->getTelefoneCelular());
+        $sql3 = "INSERT INTO tb_pessoa_telefone(id_pessoa_cpf, telefone) ";
+        $sql3 .= "VALUES (?, ?);";
+        $stmt3 = $pdo->prepare($sql3);
+        $valores3 = array($pessoa->getCpf(),$pessoa->getTelefoneResidencial());
 
-        //tabela funcionario
-        $sql1 = "INSERT INTO tb_funcionario(id_pessoa_cpf, cargo, salario, id_matricula) ";
-        $sql1 .= " VALUES (?, ?, ?, ?); ";
-        $stmt1 = $pdo->prepare($sql1);
-        $valores1 = array($pessoa->getCpf(), $funcionario->getCargo(), $funcionario->getSalario(), $funcionario->getMatricula());
-
-        //tabela perfil para LOGIN falta........
-
-        //tabela professor, se for um funcionario professor
-        if($professor->getProf() == '1'){
-            $sql3 = "INSERT INTO tb_professor(tb_funcionario_id_matricula) ";
-            $sql3 .= " VALUES (?); ";
-            $stmt3 =  $pdo->prepare($sql3);
-            $valores3 = array($funcionario->getMatricula());
-            $executou_prof = $stmt3->execute($valores3);
-        } else{
-            $executou_prof = TRUE;
-        }
-
-        if ($stmt5->execute($valores5) == TRUE && $stmt4->execute($valores4) == TRUE && $stmt->execute($valores) == TRUE && $stmt1->execute($valores1) == TRUE && $stmt2->execute($valores2) == TRUE && $executou_prof == TRUE) {
+        $execProcedure = $stmt->execute($valores);
+        $stmt->closeCursor(); //para realizar mais consultas
+        //id para professor tem que testar ver se isso funciona mesmo
+        //$lastId = $pdo->lastInsertId();
+        //echo "Aqui------>".$lastId;//testando
+        //execução da procedure e telefone
+        if ( $execProcedure == TRUE && $stmt2->execute($valores2) == TRUE && $stmt3->execute($valores3) == TRUE) {
+             /*add cada um dos cursos na tabela curso
+            if(strcmp($funcionario->getProf , "Professor") == 0){
+                foreach ($cursos as $umCurso){
+                    if($umCurso !=  ''){
+                        $sql1 = "INSERT INTO tb_curso(tb_professor_tb_funcionario_id_matricula, curso) ";
+                        $sql1 .= "VALUES (?, ?);";
+                        $stmt1 = $pdo->prepare($sql1);
+                        $valores1 = array($lastId,$umCurso;
+                        //se ocorrer erro
+                        if( $stmt1->execute($valores1) != TRUE){
+                            $pdo->rollBack();
+                            return "Não foi possível adicionar Funcionário, ocorreu um erro!";            
+                        }
+                    }
+                }
+            }*/
             $pdo->commit();
             return "Funcionário salvo com sucesso! O login do usuário é o CPF e não poderá ser alterado.";
         } else {
             $pdo->rollBack();
             return "Ocorreu um erro!";
         }
-    }
 
+
+    }
+ /*
     function listar() {
         $pdo = Dao::getInstance();
         $sql = "SELECT p.cpf, p.nome, p.sobrenome, p.sexo, p.data_nascimento, p.rg, p.endereco,p.uf, "
@@ -68,7 +74,7 @@ class FuncionarioDao extends Dao {
             $pessoa->setSexo($linhaConsulta[3]);
             $pessoa->setDataNascimento(date_format(date_create($linhaConsulta[4]), 'd/m/Y'));
             $pessoa->setRg($linhaConsulta[5]);
-            //$pessoa->setTelefoneResidencial($linhaConsulta[6] . " / " . $linhaConsulta[7]);
+            $pessoa->setTelefoneResidencial($linhaConsulta[6] . " / " . $linhaConsulta[7]);
             $pessoa->setEndereco($linhaConsulta[8]);
             $pessoa->setUf($linhaConsulta[9]);
             $pessoa->setCidade($linhaConsulta[10]);
@@ -82,7 +88,7 @@ class FuncionarioDao extends Dao {
         return $funcionarios;
     }
 
- /*   public function excluir($pessoa) {
+  public function excluir($pessoa) {
         $pdo = Dao::getInstance();
         $pdo->beginTransaction();
         $sql = "DELETE FROM usuario WHERE id_pessoa_cpf = ?";
@@ -162,3 +168,4 @@ class FuncionarioDao extends Dao {
     }
 */
 }
+?>

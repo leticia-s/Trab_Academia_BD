@@ -76,7 +76,7 @@
                 var scntDiv = $('#dynamicDiv');
                 $(document).on('click', '#addInput', function () {
                     $('<p>'+
-                        '<input type="text" id="inputeste" size="20" value="" placeholder="" /> '+
+                        '<input type="text" name="curso[]" id="inputeste" size="20" value="" placeholder="" /> '+
                         '<a class="btn btn-danger" href="javascript:void(0)" id="remInput">'+
                             '<span class="glyphicon glyphicon-minus" aria-hidden="true"></span> '+
                             'Remover curso'+

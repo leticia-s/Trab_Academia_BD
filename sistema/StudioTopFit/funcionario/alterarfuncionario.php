@@ -137,6 +137,14 @@
 
                     </div>
                 </div>
+                 <!-- SALARIO-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Salário:</label>
+                    <div class="input-group"><span class="input-group-addon left">R$</span>
+                        <input style="width: 170px;" type="number" step="500.00" value ="<?php echo $pessoa->getSalario_Funcionario(); ?>" class="form-control" id="salario" placeholder="Digite o valor" name="salario" required="">
+                    </div>  
+                 </div>  
+
                 <div class="form-group">
                     <label class="col-md-4 control-label" for="dataNascimento">Data de nascimento:</label>  
                     <div class="form-group">

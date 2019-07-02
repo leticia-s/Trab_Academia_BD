@@ -158,18 +158,11 @@ class Pessoa {
     }
  
     function setSenha($senha) {
-        $this->senha = md5($senha);
+        $this->senha = $senha;
     }
 
     function setIdPerfil($idPerfil) {
         $this->idPerfil = $idPerfil;
-    }
-
-    function setPesoInicial_Aluno($pesoInicial_Aluno) {
-        if ($pesoInicial_Aluno == '0')
-            $this->pesoInicial_Aluno = "Inativo";
-        else
-            $this->pesoInicial_Aluno = $pesoInicial_Aluno;
     }
 
     function setPesoDurante_Aluno($pesoDurante_Aluno) {
@@ -187,18 +180,10 @@ class Pessoa {
 
     
     //modificação para listar array funcionario
-    private $matricula_Funcionario;
     private $salario_Funcionario;
-     function setSalario_Funcionario($salaSalariouncionario) {
-        $this->salario_Funcionario = $salario_Funcionario;
+     function setSalario_Funcionario($salario_funcionario) {
+        $this->salario_Funcionario = $salario_funcionario;
     }
-     function setMatricula_Funcionario($matricula_Funcionario) {
-        $this->matricula_Funcionario = $matricula_Funcionario;
-    }
-    function getMatricula_Funcionario() {
-        return $this->matricula_Funcionario;
-    }
-
     function getSalario_Funcionario() {
         return $this->salario_Funcionario;
     }

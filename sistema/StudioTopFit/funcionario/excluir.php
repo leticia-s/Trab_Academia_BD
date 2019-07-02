@@ -36,34 +36,6 @@
                 }
             }
         </script>
-        <style> body{background-color: #E3E3E3;}
-            legend { 
-                background :  #496B96 ; 
-                color :  #fff ; 
-                padding :  2px  115px  ; 
-                font-size :  19px ; 
-                border-radius :  10px ; 
-                font-weight:  bold;
-            }
-            table, th, td {
-                border: 1px solid black;
-                border-collapse: collapse;
-            }
-            th, td {
-                padding: 5px;
-                text-align: left;
-            }
-            table tr:nth-child(even) {
-                background-color: #DEDEE0;
-            }
-            table tr:nth-child(odd) {
-                background-color:#EBEBEC;
-            }
-            table th	{
-                background-color: #B4B4B5;
-                color: #000000;
-            }
-        </style>  
     </head>
     <body>     
         <div class="container">

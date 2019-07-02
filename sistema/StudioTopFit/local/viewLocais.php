@@ -108,6 +108,11 @@
                 </table>
             </div>
         </div>
+         <?php
+        if (isset($_GET['msg'])) {
+            echo "<script>alert('" . $_GET['msg'] . "');</script>";
+        }
+        ?>
     </body>
 </html>
 

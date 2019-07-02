@@ -1,16 +1,12 @@
 <?php
 
 class Funcionario {
-    private $matricula;
     private $cargo;
     private $salario;
 
 
     function getCargo() {
         return $this->cargo;
-    }
-    function getMatricula() {
-        return $this->matricula;
     }
     function getSalario() {
         return $this->salario;
@@ -23,26 +19,19 @@ class Funcionario {
      function setSalario($salario) {
         $this->salario = $salario;
     }
-    function setMatricula($matricula) {
-        $this->matricula= $matricula;
-    }
-}
-
-
-class Professor{
-
     private $se_prof;
 
     function setProf($se_prof) {
         if ($se_prof == "nao")
-            $this->se_prof = '0';
+            $this->se_prof = "Funcionário";
         if ($se_prof == "sim")
-            $this->se_prof = '1';
+            $this->se_prof = "Professor";
     }
     function getProf() {
         return $this->se_prof;
     }
-
 }
+
+
 
 ?>
