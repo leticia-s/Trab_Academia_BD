@@ -2,6 +2,7 @@
 
 * PHP
 
-* MySQL Workbench 6.2 CE
+* MySQL Workbench 8.0 CE
 
-* XAMPP 1.8.3-5
+* XAMPP 7.3.6-0
+
