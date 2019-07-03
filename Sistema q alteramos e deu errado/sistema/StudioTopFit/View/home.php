@@ -1,1 +1,0 @@
-<p>O sistema<strong> STUDIO TOP FIT </strong>tem por objetivo de auxiliar o cotidiano de uma academia, apoiar os colaboradores de forma ágil e eficiente proporcionando ao aluno o conforto e o melhor atendimento.</p>
