@@ -89,11 +89,12 @@ $idcpf = $_SESSION['id_pessoa_cpf'];
                                     }
                                     ?></td>
                                 <td><?php
+                                    $pesoInicial = str_replace(",", ".", $pessoa->getPesoInicial_Aluno());
+                                    $pesoAtual = str_replace(",", ".", $pessoa->getPesoDurante_Aluno());
                                     if ($pessoa->getPesoInicial_Aluno() == "Inativo") {
                                         echo "Inativo";
-                                    } else {
-                                        $pesoInicial = str_replace(",", ".", $pessoa->getPesoInicial_Aluno());
-                                        $pesoAtual = str_replace(",", ".", $pessoa->getPesoDurante_Aluno());
+                                    } else if($pesoAtual != 0){
+                                        
                                         if ($pesoInicial > $pesoAtual) {
                                             $total = $pesoInicial - $pesoAtual;
                                             $total = str_replace(".", ",", $total);
@@ -105,6 +106,8 @@ $idcpf = $_SESSION['id_pessoa_cpf'];
                                         } else if ($pesoInicial == $pesoAtual) {
                                             echo "Não ganhou nem perdeu peso";
                                         }
+                                    }else if($pesoAtual == 0){
+                                        echo "Sem registro";
                                     }
                                     ?></td>
                                 <td> <a href="editarpeso.php">
