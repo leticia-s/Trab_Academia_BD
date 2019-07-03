@@ -84,13 +84,13 @@ class Pessoa {
 
     function setSexo($sexo) {
         if ($sexo == "feminino")
-            $this->sexo = '0';
+            $this->sexo = 0;
         if ($sexo == "masculino")
-            $this->sexo = '1';
+            $this->sexo = 1;
         if ($sexo == '1')
-            $this->sexo = 'M';
+            $this->sexo = 1;
         if ($sexo == '0')
-            $this->sexo = 'F';
+            $this->sexo = 0;
     }
 
     function setDataNascimento($dataNascimento) {

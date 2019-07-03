@@ -439,7 +439,7 @@ BEGIN
     END;
     
     START TRANSACTION;
-        SELECT idperfil INTO user_type FROM `perfil` WHERE perfil=type_user ORDER BY idperfil DESC LIMIT 1;
+        SELECT idperfil INTO user_type FROM `perfil` WHERE perfil LIKE type_user ORDER BY idperfil DESC LIMIT 1;
         INSERT INTO `tb_pessoa` (cpf, nome, sobrenome, sexo, data_nascimento, endereco, uf, cidade, bairro, rg, email) 
         VALUES (cpf, nome, sobrenome, sexo, data_nascimento, endereco, uf, cidade, bairro, rg, email);
         INSERT INTO `usuario` (id_pessoa_cpf, perfil_idperfil, senha, usuario)
@@ -483,7 +483,7 @@ DELIMITER ;
 -- INSERT ADMIN LOGIN
 -- -----------------------------------------------------
 INSERT INTO perfil (idperfil, perfil) VALUES (1, 'Aluno');
-INSERT INTO perfil (idperfil, perfil) VALUES (2, 'Funcionário');
+INSERT INTO perfil (idperfil, perfil) VALUES (2, 'Funcionario');
 INSERT INTO perfil (idperfil, perfil) VALUES (3, 'Administrador');
 CALL create_user('Administrador', 11111111111, 'admin', 'admin', 1, '1996-01-01', '', 'DF', 'Brasília', 'UnB', '1111111', 'admin@admin.com', 'admin', '123456789', '', 0);
 

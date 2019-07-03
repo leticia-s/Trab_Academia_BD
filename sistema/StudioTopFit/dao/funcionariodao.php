@@ -10,12 +10,10 @@ class FuncionarioDao extends Dao {
         //Procedure adicionar tabela pessoa, usuario, perfil, professor, funcionario
         $pdo = Dao::getInstance();
         $pdo->beginTransaction();
-        $sql = "CALL create_user(?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,? ,? ,?, ? ,?)";
+        $sql = "CALL create_user(?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,? ,? ,?, ? , ?);";
         $stmt = $pdo->prepare($sql);
         $valores = array($funcionario->getProf(), $pessoa->getCpf(), $pessoa->getNome(), $pessoa->getSobrenome(), $pessoa->getSexo(), $pessoa->getDataNascimento(), $pessoa->getEndereco(), $pessoa->getUf(), $pessoa->getCidade(), $pessoa->getBairro(), $pessoa->getRg(), $pessoa->getEmail(),$pessoa->getNome(), $pessoa->getSenha(), $funcionario->getCargo(), $funcionario->getSalario());
-        echo $sql;
-        for($i=0;$i<16;$i++){
-        echo "'". $valores[$i] . "', ";}
+        
         //tabela telefones
         $sql2 = "INSERT INTO tb_pessoa_telefone(id_pessoa_cpf, telefone) ";
         $sql2 .= "VALUES (?, ?);";
@@ -26,7 +24,10 @@ class FuncionarioDao extends Dao {
         $stmt3 = $pdo->prepare($sql3);
         $valores3 = array($pessoa->getCpf(),$pessoa->getTelefoneResidencial());
 
-        $execProcedure = $stmt->execute($valores);
+        $execProcedure = $stmt->execute($valores);/* 
+        foreach ($stmt->fetchAll() as $linhaConsulta) { // Para recuperar o erro da procedure
+            print_r ($linhaConsulta);
+        } */
         $stmt->closeCursor(); //para realizar mais consultas
         //id para professor tem que testar ver se isso funciona mesmo
         //$lastId = $pdo->lastInsertId();

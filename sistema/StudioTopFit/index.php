@@ -145,7 +145,7 @@ include 'View/validalogin.php';
             </nav>
 
             <div class="container-fluid">
-                <iframe src="View/home.php" name="centropag" width="100%" height="100%" frameborder="0"></iframe>
+                <iframe src="View/home.php" name="centropag" width="100%" onload="this.style.height=this.contentDocument.body.scrollHeight +'px';" frameborder="0"></iframe>
             </div>
         </div>
 		

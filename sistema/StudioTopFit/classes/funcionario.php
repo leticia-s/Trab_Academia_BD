@@ -22,10 +22,7 @@ class Funcionario {
     private $se_prof;
 
     function setProf($se_prof) {
-        if ($se_prof == "nao")
-            $this->se_prof = "Funcionário";
-        if ($se_prof == "sim")
-            $this->se_prof = "Professor";
+        $this->se_prof = "Funcionario";
     }
     function getProf() {
         return $this->se_prof;

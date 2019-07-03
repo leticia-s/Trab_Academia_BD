@@ -5,10 +5,11 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>STUDIO TOP FIT - Cadastrar funcionário</title>
-        <script type="text/javascript" src="/StudioTopFit/js/jquery-2.1.4.min.js"></script>
-        <script type="text/javascript" src="/StudioTopFit/js/inputmask.js"></script>
-        <script type="text/javascript" src="/StudioTopFit/js/jquery.inputmask.js"></script>
-        <script src="js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap-reboot.min.css" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         <script type="text/javascript">
             $(document).ready(function () {
                 $("#telefoneResidencial").inputmask("(99) 9999-9{+}");
@@ -95,33 +96,26 @@
     </head>
     <body>
 
-        <div class="container">
-            <form class="form-horizontal" action="/StudioTopFit/controller/controllerfuncionario.php?operacao=salvar" method="POST" onsubmit="return validaCampos()">
-
+        <div class="container mb-5">
+            <form class="form-horizontal row" action="/controller/controllerfuncionario.php?operacao=salvar" method="POST" onsubmit="return validaCampos()">
                 <!-- Form Name -->
                 <legend>Cadastrar Funcionário</legend>
                 <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="nome">Nome:</label>  
-                    <div class="col-md-2">
-                        <input id="nome" name="nome" maxlength="15" type="text" style="width: 170px;" placeholder="Digite seu nome" class="form-control input-md" required="">
-
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label class="control-label" for="nome">Nome:</label>  
+                        <input id="nome" name="nome" maxlength="15" type="text" placeholder="Digite seu nome" class="form-control input-md" required="">
                     </div>
-                </div>
 
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="sobrenome">Sobrenome:</label>  
-                    <div class="col-md-4">
-                        <input id="sobrenome" name="sobrenome" maxlength="45" type="text" style="width: 350px;" placeholder="Digite seu sobrenome" class="form-control input-md" required="">
-
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="control-label" for="sobrenome">Sobrenome:</label>  
+                        <input id="sobrenome" name="sobrenome" maxlength="45" type="text" placeholder="Digite seu sobrenome" class="form-control input-md" required="">
                     </div>
-                </div>
 
-                <!-- Multiple Radios (inline) -->
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="sexo">Sexo:</label>
-                    <div class="col-md-4"> 
+                    <!-- Multiple Radios (inline) -->
+                    <div class="form-group">
+                        <label class="control-label" for="sexo">Sexo:</label>
                         <label class="radio-inline" for="sexo-0">
                             <input type="radio" name="sexo" id="sexo-0" value="feminino" checked="checked">
                             Feminino
@@ -131,139 +125,107 @@
                             Masculino
                         </label>
                     </div>
-                </div>
 
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="cargo">Cargo:</label>  
-                    <div class="col-md-4">
-                        <input id="cargo" name="cargo" type="text" maxlength="30" placeholder="Digite seu cargo" class="form-control input-md" required="">
-
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="dataNascimento">Data de nascimento:</label>  
+                    <!-- Text input-->
                     <div class="form-group">
-                        <label class="radio-inline">
-                            <input  placeholder="dia" style="width: 65px;" type="number" min="1" max="31" data-ng-maxlength="2" maxlength="2" name="dia" style="width: 50px;" required="" class="form-control input-md">
-                        </label>
-                        <label class="radio-inline">
-                            <select class="form-control" required="mês" name="mes" ><option value="" class="">mês</option><option value="01">Janeiro</option><option value="02">Fevereiro</option><option value="03">Março</option><option value="04">Abril</option><option value="05">Maio</option><option value="06">Junho</option><option value="07">Julho</option><option value="08">Agosto</option><option value="09">Setembro</option><option value="10">Outubro</option><option value="11">Novembro</option><option value="12">Dezembro</option></select>
-                        </label>
-                        <label class="radio-inline">
-                            <input placeholder="ano" type="number" min="1900" max="2014" id="aniversarioAno" name="ano" style="width: 80px;" required="" class="form-control input-md">
-                        </label>
+                        <label class="control-label" for="cargo">Cargo:</label>
+                        <input id="cargo" name="cargo" type="text" maxlength="30" placeholder="Digite seu cargo" class="form-control input-md" required="">
                     </div>
-                </div>
-
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="email">E-mail:</label>  
-                    <div class="col-md-4">
-                        <input id="email" name="email" maxlength="100" type="text" style="width: 360px;" placeholder="Digite seu e-mail" class="form-control input-md" required="">
-
+                    <div class="form-group">
+                        <label class="control-label" for="dataNascimento">Data de nascimento:</label>  
+                        <div class="form-group">
+                            <label class="radio-inline">
+                                <input  placeholder="dia" type="number" min="1" max="31" data-ng-maxlength="2" maxlength="2" name="dia" required="" class="form-control input-md">
+                            </label>
+                            <label class="radio-inline">
+                                <select class="form-control" required="mês" name="mes" ><option value="" class="">mês</option><option value="01">Janeiro</option><option value="02">Fevereiro</option><option value="03">Março</option><option value="04">Abril</option><option value="05">Maio</option><option value="06">Junho</option><option value="07">Julho</option><option value="08">Agosto</option><option value="09">Setembro</option><option value="10">Outubro</option><option value="11">Novembro</option><option value="12">Dezembro</option></select>
+                            </label>
+                            <label class="radio-inline">
+                                <input placeholder="ano" type="number" min="1900" max="2014" id="aniversarioAno" name="ano" style="width: 80px;" required="" class="form-control input-md">
+                            </label>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="endereco">Endereço</label>  
-                    <div class="col-md-4">
-                        <input id="endereco" name="endereco" maxlength="80" type="text" style="width: 360px;" placeholder="Digite seu endereço" class="form-control input-md" required="">
-
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="control-label" for="email">E-mail:</label>  
+                            <input id="email" name="email" maxlength="100" type="text" placeholder="Digite seu e-mail" class="form-control input-md" required="">
                     </div>
-                </div>
 
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="cidade">Cidade:</label>  
-                    <div class="col-md-2">
-                        <input id="cidade" name="cidade" maxlength="15" type="text"  style="width: 170px;" placeholder="Digite sua cidade" class="form-control input-md" required="">
-
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="control-label" for="endereco">Endereço</label> 
+                        <input id="endereco" name="endereco" maxlength="80" type="text" placeholder="Digite seu endereço" class="form-control input-md" required="">
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="bairro">Bairro:</label>  
-                    <div class="col-md-2">
-                        <input id="bairro" name="bairro" maxlength="25" type="text"  style="width: 170px;" placeholder="Digite seu bairro" class="form-control input-md" required="">
 
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="control-label" for="cidade">Cidade:</label>  
+                        <input id="cidade" name="cidade" maxlength="15" type="text" placeholder="Digite sua cidade" class="form-control input-md" required="">
                     </div>
-                </div>
 
-                <!-- Select Basic -->
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="uf">UF:</label>
-                    <div class="col-md-1">
-                        <select required="--" style="width: 71px;" id="uf" name="uf" class="form-control">
+                    <div class="form-group">
+                        <label class="control-label" for="bairro">Bairro:</label>  
+                        <input id="bairro" name="bairro" maxlength="25" type="text" placeholder="Digite seu bairro" class="form-control input-md" required="">
+                    </div>
+
+                    <!-- Select Basic -->
+                    <div class="form-group">
+                        <label class="control-label" for="uf">UF:</label>
+                        <select required="--" id="uf" name="uf" class="form-control">
                             <option value="" class="">--</option><option value="AC">AC</option><option value="AL">AL</option><option value="AP">AP</option><option value="AM">AM</option><option value="BA">BA</option><option value="CE">CE</option><option value="DF">DF</option><option value="ES">ES</option><option value="GO">GO</option><option value="MA">MA</option><option value="MT">MT</option><option value="MS">MS</option><option value="MG">MG</option><option value="PA">PA</option><option value="PB">PB</option><option value="PR">PR</option><option value="PE">PE</option><option value="PI">PI</option><option value="RJ">RJ</option><option value="RN">RN</option><option value="RS">RS</option><option value="RO">RO</option><option value="RR">RR</option><option value="SC">SC</option><option value="SP">SP</option><option value="SE">SE</option><option value="TO">TO</option>
                         </select>
                     </div>
                 </div>
-
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="cpf">CPF:</label>  
-                    <div class="col-md-2">
-                        <input id="cpf" name="cpf" type="text" style="width: 170px;" placeholder="" class="form-control input-md" required="">
-
+                <div class="col-12 col-md-6">
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="control-label" for="cpf">CPF:</label>  
+                        <input id="cpf" name="cpf" type="text" placeholder="" class="form-control input-md" required="">
                     </div>
-                </div>
 
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="rg">RG:</label>  
-                    <div class="col-md-2">
-                        <input id="rg" name="rg"  maxlength="20" type="text" placeholder=""  style="width: 170px;" class="form-control input-md" required="">
-
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="control-label" for="rg">RG:</label>  
+                        <input id="rg" name="rg"  maxlength="20" type="text" placeholder="" class="form-control input-md" required="">
                     </div>
-                </div>
 
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="telefoneResidencial">Telefone Residencial:</label>  
-                    <div class="col-md-2">
-                        <input id="telefoneResidencial"  maxlength="15" style="width: 170px;" name="telefoneResidencial" type="text" placeholder="" class="form-control input-md" required="">
-
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="control-label" for="telefoneResidencial">Telefone Residencial:</label>
+                        <input id="telefoneResidencial"  maxlength="15" name="telefoneResidencial" type="text" placeholder="" class="form-control input-md" required="">
                     </div>
-                </div>
 
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="telefoneCelular">Telefone Celular:</label>  
-                    <div class="col-md-2">
-                        <input id="telefoneCelular" maxlength="15" name="telefoneCelular"  style="width: 170px;" type="text" placeholder="" class="form-control input-md" required="">
-
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="control-label" for="telefoneCelular">Telefone Celular:</label>  
+                        <input id="telefoneCelular" maxlength="15" name="telefoneCelular" type="text" placeholder="" class="form-control input-md" required="">
                     </div>
-                </div>
 
-                <!-- Password input-->
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="senha">Senha:</label>
-                    <div class="col-md-2">
-                        <input id="senha" name="senha" type="password" maxlength="8" style="width: 170px;" placeholder="Digite sua senha" class="form-control input-md" required="">
-
+                    <!-- Password input-->
+                    <div class="form-group">
+                        <label class="control-label" for="senha">Senha:</label>
+                        <input id="senha" name="senha" type="password" maxlength="8" placeholder="Digite sua senha" class="form-control input-md" required="">
                     </div>
-                </div>
 
-                <!-- Text input-->
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="confirmeSenha">Confirme a senha:</label>  
-                    <div class="col-md-2">
-                        <input id="confirmeSenha" name="confirmeSenha"  maxlength="8" style="width: 170px;" type="password" placeholder="Digite sua senha" class="form-control input-md" required="">
-
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="control-label" for="confirmeSenha">Confirme a senha:</label>
+                        <input id="confirmeSenha" name="confirmeSenha"  maxlength="8" type="password" placeholder="Digite sua senha" class="form-control input-md" required="">
                     </div>
-                </div>
-                  <!-- SALARIO-->
-                <div class="form-group">
-                    <label class="col-md-4 control-label">Salário:</label>
-                    <div class="input-group"><span class="input-group-addon left">R$</span>
-                        <input style="width: 170px;" type="number" step="500.00" class="form-control" id="salario" placeholder="Digite o valor" name="salario" required="">
+                    <!-- SALARIO-->
+                    <div class="form-group">
+                        <label class="control-label">Salário:</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">R$</span>
+                            </div>
+                            <input type="number" step="500.00" class="form-control" id="salario" placeholder="Digite o valor" name="salario" required="">
+                        </div>  
                     </div>  
-                 </div>  
-                 <!-- é professor  -->
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="prof">É um professor:</label>
-                    <div class="col-md-4"> 
+                    <!-- é professor  -->
+                    <div class="form-group">
+                        <label class="control-label" for="prof">É um professor:</label>
                         <label class="radio-inline" for="prof-1">
                             <input type="radio" name="prof" id="prof-1" value="sim" >
                             Sim
@@ -273,27 +235,24 @@
                             Não
                         </label>
                     </div>
-                </div>
-                <!-- campo dinamico --> 
-                 <div class="form-group">
-                    <label class="col-md-4 control-label" for="prof">Adicionar cursos, caso seja um professor:</label> 
-                    <a class="btn btn-primary" href="javascript:void(0)" id="addInput">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                        Adicionar Curso 
-                    </a>
-                    <br/>
-                    <div id="dynamicDiv">
-                        <p>
-                        </p>
+                    <!-- campo dinamico --> 
+                    <div class="form-group">
+                        <label class="control-label" for="prof">Adicionar cursos, caso seja um professor:</label> 
+                        <a class="btn btn-primary" href="javascript:void(0)" id="addInput">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            Adicionar Curso 
+                        </a>
+                        <br/>
+                        <div id="dynamicDiv">
+                            <p>
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <!-- Button (Double) -->
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="enviar"></label>
-                    <div class="col-md-8">
-                        <button id="enviar" type="submit" name="enviar" class="btn btn-success">Enviar</button>
-                        <button id="limpar" name="limpar" type="reset" class="btn btn-warning">Limpar</button>
-                    </div>
+                <div class="col-12 d-flex flex-wrap justify-content-end">
+                    <button id="enviar" type="submit" name="enviar" class="btn btn-success mr-2">Enviar</button>
+                    <button id="limpar" name="limpar" type="reset" class="btn btn-warning">Limpar</button>
                 </div>
                 
 
