@@ -168,7 +168,8 @@ CREATE TABLE `tb_aluno` (
   `id_pessoa_cpf` varchar(11) NOT NULL,
   `peso_inicial` float DEFAULT NULL,
   `peso_durante` float DEFAULT NULL,
-  `data_entrada` date NOT NULL
+  `data_entrada` date NOT NULL,
+  `foto` BLOB
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -477,6 +478,39 @@ BEGIN
     COMMIT;
 END $$
 DELIMITER ;
+
+-- -----------------------------------------------------
+-- Placeholder table for view `fitness_life`.`lista_turma`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `fitness_life`.`lista_grade` (`dia_da_semana` INT, `horario_inicial` INT, `horario_final` INT, `nome` INT, `localizacao` INT);
+
+-- -----------------------------------------------------
+-- View `fitness_life`.`lista_grade`
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS `fitness_life`.`lista_grade` ;
+USE `db_studiotopfit`;
+CREATE  OR REPLACE VIEW `lista_grade` AS SELECT 
+GROUP_CONCAT(CASE t.dia_da_semana
+    WHEN 0 THEN 'Domingo'
+    WHEN 1 THEN 'Segunda'
+    WHEN 2 THEN 'Terça'
+    WHEN 3 THEN 'Quarta'
+    WHEN 4 THEN 'Quinta'
+    WHEN 5 THEN 'Sexta'
+    WHEN 6 THEN 'Sábado'
+END) AS 'Dia da semana', 
+GROUP_CONCAT(t.horario_inicial) AS 'Horário de início', GROUP_CONCAT(t.horario_final) AS 'Horário de término', 
+GROUP_CONCAT(a.nome) AS 'Aula', GROUP_CONCAT(s.localizacao) AS 'local', GROUP_CONCAT(ps.nome) AS 'Professor(es)', 
+COUNT(ta.tb_aluno_id_matricula) AS 'Qtd. Alunos', GROUP_CONCAT(t.descricao) AS 'Descrição'
+FROM tb_local AS s, tb_aula AS a, tb_turma_has_tb_professor AS tp, tb_pessoa AS ps, tb_funcionario AS tf, tb_turma AS t
+LEFT JOIN tb_turma_has_tb_aluno AS ta ON ta.tb_turma_id_codigo = t.id_codigo
+WHERE t.tb_local_id_local = s.id_local 
+AND t.aula_id_aula = a.id_aula 
+AND t.id_codigo = tp.tb_turma_id_codigo 
+AND tp.tb_turma_id_codigo = t.id_codigo
+AND tf.id_matricula = tp.tb_professor_tb_funcionario_id_matricula
+AND ps.cpf = tf.id_pessoa_cpf
+GROUP BY t.id_codigo;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
