@@ -45,7 +45,7 @@ class AgendaBusca extends Dao {
 
     function buscagrade($idcpf, $diasemana) {
         $pdo = Dao::getInstance();
-        $sql = "SELECT ase.horario_inicial, ase.horario_final, ase.nome_aula FROM tb_agendamento ag INNER JOIN tb_agenda_semanal ase on ase.id_agenda_semanal = ag.id_agenda_semanal where ag.id_pessoa_cpf = ? AND ase.dia_da_semana = ? ORDER BY ase.horario_inicial ASC";
+        $sql = "SELECT v.horario_inicial, v.horario_final, v.nome_aula FROM lista_grade AS v where v.id_pessoa_cpf = ? and v.dia_da_semana = ?";
         $result = $pdo->prepare($sql);
         $result->execute(array($idcpf, $diasemana));
 

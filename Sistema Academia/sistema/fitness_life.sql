@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 
 --
 -- Banco de dados: `fitness_life`
---
+drop database `fitness_life`;
 CREATE DATABASE IF NOT EXISTS `fitness_life` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `fitness_life`;
 
@@ -208,7 +208,8 @@ INSERT INTO `tb_aluno` (`id_pessoa_cpf`, `peso_inicial`, `peso_durante`, `data_e
 DROP TABLE IF EXISTS `tb_funcionario`;
 CREATE TABLE `tb_funcionario` (
   `id_pessoa_cpf` varchar(11) NOT NULL,
-  `cargo` varchar(30) NOT NULL
+  `cargo` varchar(30) NOT NULL,
+  `salario` DECIMAL(7,2)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -419,10 +420,117 @@ ALTER TABLE `tb_funcionario`
   ADD CONSTRAINT `fk_tb_funcionario_tb_pessoa1` FOREIGN KEY (`id_pessoa_cpf`) REFERENCES `tb_pessoa` (`cpf`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
-DROP PROCEDURE IF EXISTS `fitness_life`.`create_user`;
+-- -----------------------------------------------------
+-- Table `fitness_life`.`tb_professor`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `fitness_life`.`tb_professor` ;
+
+CREATE TABLE IF NOT EXISTS `fitness_life`.`tb_professor` (
+  `tb_funcionario_id_pessoa_cpf` VARCHAR(11) NOT NULL,
+  PRIMARY KEY (`tb_funcionario_id_pessoa_cpf`),
+  CONSTRAINT `fk_tb_professor_tb_funcionario1`
+    FOREIGN KEY (`tb_funcionario_id_pessoa_cpf`)
+    REFERENCES `fitness_life`.`tb_funcionario` (`id_pessoa_cpf`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `fitness_life`.`tb_agenda_semanal_has_tb_professor`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `fitness_life`.`tb_agenda_semanal_has_tb_professor` ;
+
+CREATE TABLE IF NOT EXISTS `fitness_life`.`tb_agenda_semanal_has_tb_professor` (
+  `tb_agenda_semanal_id_agenda_semanal` INT(4) NOT NULL,
+  `tb_professor_tb_funcionario_id_pessoa_cpf` VARCHAR(11) NOT NULL,
+  PRIMARY KEY (`tb_agenda_semanal_id_agenda_semanal`, `tb_professor_tb_funcionario_id_pessoa_cpf`),
+  INDEX `fk_tb_agenda_semanal_has_tb_professor_tb_professor1_idx` (`tb_professor_tb_funcionario_id_pessoa_cpf` ASC) ,
+  INDEX `fk_tb_agenda_semanal_has_tb_professor_tb_agenda_semanal1_idx` (`tb_agenda_semanal_id_agenda_semanal` ASC) ,
+  CONSTRAINT `fk_tb_agenda_semanal_has_tb_professor_tb_agenda_semanal1`
+    FOREIGN KEY (`tb_agenda_semanal_id_agenda_semanal`)
+    REFERENCES `fitness_life`.`tb_agenda_semanal` (`id_agenda_semanal`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_agenda_semanal_has_tb_professor_tb_professor1`
+    FOREIGN KEY (`tb_professor_tb_funcionario_id_pessoa_cpf`)
+    REFERENCES `fitness_life`.`tb_professor` (`tb_funcionario_id_pessoa_cpf`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+-- -----------------------------------------------------
+-- Table `fitness_life`.`tb_aula`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `fitness_life`.`tb_aula` ;
+
+CREATE TABLE IF NOT EXISTS `fitness_life`.`tb_aula` (
+  `id_aula` INT(4) NOT NULL,
+  `nome_aula` VARCHAR(25) NOT NULL,
+  PRIMARY KEY (`id_aula`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `fitness_life`.`tb_sala`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `fitness_life`.`tb_sala` ;
+
+CREATE TABLE IF NOT EXISTS `fitness_life`.`tb_sala` (
+  `id_sala` INT(4) NOT NULL,
+  `localizacao` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id_sala`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `fitness_life`.`tb_auditoria_pagamento`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `fitness_life`.`tb_auditoria_pagamento` ;
+
+CREATE TABLE IF NOT EXISTS `fitness_life`.`tb_auditoria_pagamento` (
+  `id` INT(11) NOT NULL,
+  `data_log` TIMESTAMP NOT NULL,
+  `coluna_alterada` VARCHAR(30) NOT NULL,
+  `valor_antigo` VARCHAR(250) NOT NULL,
+  `mysql_user` VARCHAR(50) NOT NULL,
+  `tb_aluno_id_pessoa_cpf` VARCHAR(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_tb_auditoria_pagamento_tb_aluno1_idx` (`tb_aluno_id_pessoa_cpf` ASC) ,
+  CONSTRAINT `fk_tb_auditoria_pagamento_tb_aluno1`
+    FOREIGN KEY (`tb_aluno_id_pessoa_cpf`)
+    REFERENCES `fitness_life`.`tb_aluno` (`id_pessoa_cpf`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `fitness_life`.`tb_pagamento`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `fitness_life`.`tb_pagamento` ;
+
+CREATE TABLE IF NOT EXISTS `fitness_life`.`tb_pagamento` (
+  `id_data_emissao` DATE NOT NULL,
+  `tb_aluno_id_pessoa_cpf1` VARCHAR(11) NOT NULL,
+  `data_vencimento` DATE NOT NULL,
+  `status` ENUM('Em aberto', 'Pago', 'Vencido') NOT NULL DEFAULT 'Em aberto',
+  `boleto` LONGBLOB NOT NULL,
+  `valor` DECIMAL(5,2) NOT NULL,
+  PRIMARY KEY (`id_data_emissao`, `tb_aluno_id_pessoa_cpf1`),
+  INDEX `fk_tb_pagamento_tb_aluno1_idx` (`tb_aluno_id_pessoa_cpf1` ASC) ,
+  CONSTRAINT `fk_tb_pagamento_tb_aluno1`
+    FOREIGN KEY (`tb_aluno_id_pessoa_cpf1`)
+    REFERENCES `fitness_life`.`tb_aluno` (`id_pessoa_cpf`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
 -- -----------------------------------------------------
 -- Procedure `fitness_life`.`create_user`
 -- -----------------------------------------------------
+DROP PROCEDURE IF EXISTS `fitness_life`.`create_user`;
 DELIMITER $$
 CREATE PROCEDURE create_user(
     IN type_user VARCHAR(25), 
@@ -457,8 +565,8 @@ BEGIN
     
     START TRANSACTION;
         SELECT idperfil INTO user_type FROM `perfil` WHERE perfil LIKE type_user ORDER BY idperfil DESC LIMIT 1;
-        INSERT INTO `tb_pessoa` (cpf, nome, sobrenome, sexo, data_nascimento, endereco, uf, cidade, bairro, rg, email) 
-        VALUES (cpf, nome, sobrenome, sexo, data_nascimento, endereco, uf, cidade, bairro, rg, email);
+        INSERT INTO `tb_pessoa` (cpf, nome, sobrenome, sexo, data_nascimento, endereco, uf, cidade, bairro, rg, email, telefone_celular, telefone_residencial) 
+        VALUES (cpf, nome, sobrenome, sexo, data_nascimento, endereco, uf, cidade, bairro, rg, email, telefone_celular,telefone_residencial);
         INSERT INTO `usuario` (id_pessoa_cpf, perfil_idperfil, senha, usuario)
         VALUES (cpf, user_type, senha, username);
         
@@ -479,10 +587,6 @@ BEGIN
 END $$
 DELIMITER ;
 
--- -----------------------------------------------------
--- Placeholder table for view `fitness_life`.`lista_turma`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `fitness_life`.`lista_grade` (`dia_da_semana` INT, `horario_inicial` INT, `horario_final` INT, `nome` INT, `localizacao` INT);
 
 -- -----------------------------------------------------
 -- View `fitness_life`.`lista_grade`
@@ -518,16 +622,7 @@ GROUP BY t.id_codigo;*/
 DROP VIEW IF EXISTS `fitness_life`.`lista_grade` ;
 USE `fitness_life`;
 CREATE  OR REPLACE VIEW `lista_grade` AS SELECT 
-CASE ase.dia_da_semana
-    WHEN 0 THEN 'Domingo'
-    WHEN 1 THEN 'Segunda'
-    WHEN 2 THEN 'Terça'
-    WHEN 3 THEN 'Quarta'
-    WHEN 4 THEN 'Quinta'
-    WHEN 5 THEN 'Sexta'
-    WHEN 6 THEN 'Sábado'
-END AS 'Dia da semana',
-ase.horario_inicial, ase.horario_final, ase.nome_aula, ag.id_pessoa_cpf
+ase.dia_da_semana, ase.horario_inicial, ase.horario_final, ase.nome_aula, ag.id_pessoa_cpf
 FROM tb_agendamento AS ag 
 INNER JOIN tb_agenda_semanal AS ase on ase.id_agenda_semanal = ag.id_agenda_semanal 
 ORDER BY ase.horario_inicial ASC;

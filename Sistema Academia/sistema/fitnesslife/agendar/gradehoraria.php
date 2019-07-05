@@ -94,7 +94,7 @@ include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '../dao/agendabusca.php';
                                 <?php
                                 $agendaBusca = new AgendaBusca();
 
-                                $aulas = $agendaBusca->buscagrade($idcpf, "Domingo");
+                                $aulas = $agendaBusca->buscagrade($idcpf, 'Domingo');
 
                                 if ($aulas != NULL) {
                                     ?>
@@ -129,7 +129,7 @@ include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '../dao/agendabusca.php';
                                 <?php
                                 $agendaBusca = new AgendaBusca();
 
-                                $aulas = $agendaBusca->buscagrade($idcpf, "Segunda");
+                                $aulas = $agendaBusca->buscagrade($idcpf, 'Segunda');
 
                                 if ($aulas != NULL) {
                                     ?>
@@ -164,7 +164,7 @@ include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '../dao/agendabusca.php';
                                 <?php
                                 $agendaBusca = new AgendaBusca();
 
-                                $aulas = $agendaBusca->buscagrade($idcpf, "Terça");
+                                $aulas = $agendaBusca->buscagrade($idcpf, 'Terça');
 
                                 if ($aulas != NULL) {
                                     ?>
@@ -200,7 +200,7 @@ include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '../dao/agendabusca.php';
                                 <?php
                                 $agendaBusca = new AgendaBusca();
 
-                                $aulas = $agendaBusca->buscagrade($idcpf, "Quarta");
+                                $aulas = $agendaBusca->buscagrade($idcpf, 'Quarta');
 
                                 if ($aulas != NULL) {
                                     ?>
@@ -235,7 +235,7 @@ include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '../dao/agendabusca.php';
                                 <?php
                                 $agendaBusca = new AgendaBusca();
 
-                                $aulas = $agendaBusca->buscagrade($idcpf, "Quinta");
+                                $aulas = $agendaBusca->buscagrade($idcpf, 'Quinta');
 
                                 if ($aulas != NULL) {
                                     ?>
@@ -270,7 +270,7 @@ include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '../dao/agendabusca.php';
                                 <?php
                                 $agendaBusca = new AgendaBusca();
 
-                                $aulas = $agendaBusca->buscagrade($idcpf, "Sexta");
+                                $aulas = $agendaBusca->buscagrade($idcpf, 'Sexta');
 
                                 if ($aulas != NULL) {
                                     ?>
@@ -306,7 +306,7 @@ include_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '../dao/agendabusca.php';
                                 <?php
                                 $agendaBusca = new AgendaBusca();
 
-                                $aulas = $agendaBusca->buscagrade($idcpf, "Sábado");
+                                $aulas = $agendaBusca->buscagrade($idcpf, 'Sábado');
 
                                 if ($aulas != NULL) {
                                     ?>
