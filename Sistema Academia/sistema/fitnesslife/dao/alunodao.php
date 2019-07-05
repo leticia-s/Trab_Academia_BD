@@ -6,35 +6,23 @@ include_once 'dao.php';
 class AlunoDao extends Dao {
 
     function salvar($pessoa) {
+        $type_user = "Aluno";
+        $cargo = "0";
         $pdo = Dao::getInstance();
         $pdo->beginTransaction();
-        $sql = "INSERT INTO tb_pessoa(nome, sobrenome, sexo, data_nascimento,endereco, uf, cidade, bairro, cpf, rg, telefone_residencial, telefone_celular, email) ";
-        $sql .= " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); ";
+        $sql = $sql = "CALL create_user(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,? ,? ,?, ?, ?, ?, ?);";
         $stmt = $pdo->prepare($sql);
-        $valores = array($pessoa->getNome(), $pessoa->getSobrenome(), $pessoa->getSexo(), $pessoa->getDataNascimento(), $pessoa->getEndereco(), $pessoa->getUf(), $pessoa->getCidade(), $pessoa->getBairro(), $pessoa->getCpf(), $pessoa->getRg(), $pessoa->getTelefoneResidencial(), $pessoa->getTelefoneCelular(), $pessoa->getEmail());
-
-
-
-        $sql1 = "INSERT INTO tb_aluno(id_pessoa_cpf, peso_inicial, data_entrada) ";
-        $sql1 .= " VALUES (?, ?, ?); ";
-        $stmt1 = $pdo->prepare($sql1);
-        $valores1 = array($pessoa->getCpf(), $pessoa->getPesoInicial_Aluno(), $pessoa->getDataEntrada_Aluno());
-
-
-        $sql2 = "INSERT INTO usuario(id_pessoa_cpf,usuario, senha, perfil_idperfil) ";
-        $sql2 .= " VALUES (?, ?, ?, ?); ";
-
-        $stmt2 = $pdo->prepare($sql2);
-        $valores2 = array($pessoa->getCpf(), $pessoa->getNome(), $pessoa->getSenha(), $pessoa->getIdPerfil());
-
-
-        if ($stmt->execute($valores) == TRUE && $stmt1->execute($valores1) == TRUE && $stmt2->execute($valores2) == TRUE) {
+        $valores = array($type_user, $pessoa->getCpf(),$pessoa->getNome(), $pessoa->getSobrenome(), $pessoa->getSexo(), $pessoa->getDataNascimento(), $pessoa->getEndereco(), $pessoa->getUf(), $pessoa->getCidade(), $pessoa->getBairro(), $pessoa->getRg(), $pessoa->getEmail(), $pessoa->getTelefoneResidencial(), $pessoa->getTelefoneCelular(), $pessoa->getPesoInicial_Aluno(), $pessoa->getDataEntrada_Aluno(),$pessoa->getNome(),$pessoa->getSenha(),$cargo);
+       
+            // ignore esse comentario: somente para testes: echo '='.$dados[0]['Mensagem'] . '<br>' ;
+        if ($stmt->execute($valores)) {
             $pdo->commit();
             return "Aluno salvo com sucesso! O login do usuário é o CPF e não poderá ser alterado.";
         } else {
             $pdo->rollBack();
             return "Ocorreu um erro!";
         }
+                         
     }
 
     function listar() {

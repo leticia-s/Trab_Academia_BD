@@ -418,6 +418,66 @@ ALTER TABLE `tb_funcionario`
   ADD CONSTRAINT `fk_tb_funcionario_tb_pessoa1` FOREIGN KEY (`id_pessoa_cpf`) REFERENCES `tb_pessoa` (`cpf`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
+DROP PROCEDURE IF EXISTS `fitness_life`.`create_user`;
+-- -----------------------------------------------------
+-- Procedure `fitness_life`.`create_user`
+-- -----------------------------------------------------
+DELIMITER $$
+CREATE PROCEDURE create_user(
+    IN type_user VARCHAR(25), 
+    IN cpf VARCHAR(11), 
+    IN nome VARCHAR(15), 
+    IN sobrenome VARCHAR(45), 
+    IN sexo TINYINT(1), 
+    IN data_nascimento DATE, 
+    IN endereco VARCHAR(80), 
+    IN uf VARCHAR(2), 
+    IN cidade VARCHAR(15), 
+    IN bairro VARCHAR(25), 
+    IN rg VARCHAR(20), 
+    IN email VARCHAR(100),
+    IN telefone_celular VARCHAR(18),
+    IN telefone_residencial VARCHAR(18),
+    IN peso_inicial FLOAT,
+    in data_entrada DATE,
+    IN username VARCHAR(15), 
+    IN senha VARCHAR(45),
+    IN cargo VARCHAR(30))
+BEGIN
+    DECLARE user_type INT(4) DEFAULT 0;
+    DECLARE id_matricula INT(4) DEFAULT 0;
+    DECLARE errno INT;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        GET CURRENT DIAGNOSTICS CONDITION 1 @P1 = MYSQL_ERRNO, @P2 = MESSAGE_TEXT;
+        SELECT @P1 AS 'Código', @P2 AS 'Mensagem';
+        ROLLBACK;
+    END;
+    
+    START TRANSACTION;
+        SELECT idperfil INTO user_type FROM `perfil` WHERE perfil LIKE type_user ORDER BY idperfil DESC LIMIT 1;
+        INSERT INTO `tb_pessoa` (cpf, nome, sobrenome, sexo, data_nascimento, endereco, uf, cidade, bairro, rg, email) 
+        VALUES (cpf, nome, sobrenome, sexo, data_nascimento, endereco, uf, cidade, bairro, rg, email);
+        INSERT INTO `usuario` (id_pessoa_cpf, perfil_idperfil, senha, usuario)
+        VALUES (cpf, user_type, senha, username);
+        
+        CASE type_user
+            WHEN 'Aluno' THEN INSERT INTO `tb_aluno` (id_pessoa_cpf, peso_inicial, data_entrada) VALUES (cpf, peso_inicial, data_entrada);
+            WHEN 'Funcionário' THEN
+                BEGIN
+                    INSERT INTO `tb_funcionario` (id_pessoa_cpf, cargo) VALUES (cpf, cargo);
+
+                    CASE cargo 
+                        WHEN 'Professor' THEN INSERT INTO tb_professor (tb_funcionario_id_pessoa_cpf) VALUES (cpf);
+                        ELSE BEGIN END;  
+                    END CASE;
+                END;
+            ELSE BEGIN END;
+        END CASE;
+    COMMIT;
+END $$
+DELIMITER ;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
