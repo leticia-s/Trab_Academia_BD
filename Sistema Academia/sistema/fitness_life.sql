@@ -487,7 +487,7 @@ CREATE TABLE IF NOT EXISTS `fitness_life`.`lista_grade` (`dia_da_semana` INT, `h
 -- -----------------------------------------------------
 -- View `fitness_life`.`lista_grade`
 -- -----------------------------------------------------
-DROP VIEW IF EXISTS `fitness_life`.`lista_grade` ;
+/*DROP VIEW IF EXISTS `fitness_life`.`lista_grade` ;
 USE `db_studiotopfit`;
 CREATE  OR REPLACE VIEW `lista_grade` AS SELECT 
 GROUP_CONCAT(CASE t.dia_da_semana
@@ -510,7 +510,28 @@ AND t.id_codigo = tp.tb_turma_id_codigo
 AND tp.tb_turma_id_codigo = t.id_codigo
 AND tf.id_matricula = tp.tb_professor_tb_funcionario_id_matricula
 AND ps.cpf = tf.id_pessoa_cpf
-GROUP BY t.id_codigo;
+GROUP BY t.id_codigo;*/
+
+-- -----------------------------------------------------
+-- View `fitness_life`.`lista_grade`
+-- -----------------------------------------------------
+DROP VIEW IF EXISTS `fitness_life`.`lista_grade` ;
+USE `fitness_life`;
+CREATE  OR REPLACE VIEW `lista_grade` AS SELECT 
+CASE ase.dia_da_semana
+    WHEN 0 THEN 'Domingo'
+    WHEN 1 THEN 'Segunda'
+    WHEN 2 THEN 'Terça'
+    WHEN 3 THEN 'Quarta'
+    WHEN 4 THEN 'Quinta'
+    WHEN 5 THEN 'Sexta'
+    WHEN 6 THEN 'Sábado'
+END AS 'Dia da semana',
+ase.horario_inicial, ase.horario_final, ase.nome_aula, ag.id_pessoa_cpf
+FROM tb_agendamento AS ag 
+INNER JOIN tb_agenda_semanal AS ase on ase.id_agenda_semanal = ag.id_agenda_semanal 
+ORDER BY ase.horario_inicial ASC;
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
